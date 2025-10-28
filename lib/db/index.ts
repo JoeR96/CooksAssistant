@@ -8,3 +8,8 @@ if (!process.env.DATABASE_URL) {
 
 const client = postgres(process.env.DATABASE_URL);
 export const db = drizzle(client, { schema });
+
+// Export schema and types
+export * from "./schema";
+export * from "./types";
+export * from "./queries";
