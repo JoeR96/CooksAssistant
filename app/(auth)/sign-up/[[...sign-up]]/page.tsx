@@ -10,6 +10,7 @@ export default function SignUpPage() {
             card: "shadow-lg border-0",
           }
         }}
+        signInUrl="/sign-in"
       />
     </div>
   );
