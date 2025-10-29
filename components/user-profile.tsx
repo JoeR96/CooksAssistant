@@ -17,20 +17,20 @@ export function UserProfile() {
 
   if (!isSignedIn) {
     return (
-      <Button
-        component={Link}
-        href="/sign-in"
-        variant="contained"
-        size="small"
-        startIcon={<Login />}
-        sx={{ 
-          borderRadius: 2,
-          textTransform: 'none',
-          fontWeight: 500,
-        }}
-      >
-        Sign In
-      </Button>
+      <Link href="/sign-in" style={{ textDecoration: 'none' }}>
+        <Button
+          variant="contained"
+          size="small"
+          startIcon={<Login />}
+          sx={{ 
+            borderRadius: 2,
+            textTransform: 'none',
+            fontWeight: 500,
+          }}
+        >
+          Sign In
+        </Button>
+      </Link>
     );
   }
 
