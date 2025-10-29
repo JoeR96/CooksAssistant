@@ -1,7 +1,14 @@
 import { Recipe } from "@/lib/db/types";
 import { RecipeCard } from "./recipe-card";
-import { SeedButton } from "./seed-button";
-import { Card, CardContent } from "@/components/ui/card";
+import { SeedButton } from "@/components/seed-button";
+import { 
+  Card, 
+  CardContent, 
+  Skeleton, 
+  Box, 
+  Typography,
+  Stack
+} from "@mui/material";
 
 interface RecipeGridProps {
   recipes: Recipe[];
@@ -11,56 +18,85 @@ interface RecipeGridProps {
 export function RecipeGrid({ recipes, isLoading = false }: RecipeGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 auto-rows-fr">
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'repeat(2, 1fr)',
+            sm: 'repeat(3, 1fr)',
+            md: 'repeat(4, 1fr)',
+            lg: 'repeat(5, 1fr)',
+            xl: 'repeat(6, 1fr)',
+          },
+          gap: 3,
+        }}
+      >
         {Array.from({ length: 8 }).map((_, i) => (
-          <Card key={i} className="overflow-hidden">
-            <div className="aspect-[4/3] w-full bg-muted animate-pulse" />
-            <CardContent className="p-6">
-              <div className="h-5 bg-muted rounded mb-3 animate-pulse" />
-              <div className="h-4 bg-muted rounded w-3/4 mb-3 animate-pulse" />
-              <div className="flex gap-2 mb-4">
-                <div className="h-5 bg-muted rounded w-16 animate-pulse" />
-                <div className="h-5 bg-muted rounded w-12 animate-pulse" />
-              </div>
-              <div className="flex gap-4">
-                <div className="h-4 bg-muted rounded w-20 animate-pulse" />
-                <div className="h-4 bg-muted rounded w-16 animate-pulse" />
-              </div>
+          <Card key={i} sx={{ height: '100%' }}>
+            <Skeleton variant="rectangular" height={200} />
+            <CardContent>
+              <Skeleton variant="text" height={24} sx={{ mb: 1 }} />
+              <Skeleton variant="text" height={20} width="75%" sx={{ mb: 2 }} />
+              <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                <Skeleton variant="rounded" width={60} height={20} />
+                <Skeleton variant="rounded" width={40} height={20} />
+              </Stack>
+              <Stack direction="row" justifyContent="space-between">
+                <Skeleton variant="text" width={60} />
+                <Skeleton variant="text" width={50} />
+              </Stack>
             </CardContent>
           </Card>
         ))}
-      </div>
+      </Box>
     );
   }
 
   if (recipes.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="mx-auto h-24 w-24 text-muted-foreground/50 mb-6">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </div>
-        <h3 className="text-xl font-semibold mb-2">No recipes found</h3>
-        <p className="text-muted-foreground mb-6">
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+        <Typography variant="h2" sx={{ fontSize: '4rem', opacity: 0.3, mb: 3 }}>
+          📚
+        </Typography>
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+          No recipes found
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
           Get started by adding your first recipe to your collection.
-        </p>
+        </Typography>
         <SeedButton />
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 auto-rows-fr">
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: {
+          xs: 'repeat(2, 1fr)',
+          sm: 'repeat(3, 1fr)',
+          md: 'repeat(4, 1fr)',
+          lg: 'repeat(5, 1fr)',
+          xl: 'repeat(6, 1fr)',
+        },
+        gap: 3,
+        alignItems: 'stretch', // This ensures all grid items have the same height
+      }}
+    >
       {recipes.map((recipe, index) => (
-        <div
+        <Box
           key={recipe.id}
-          className="animate-fade-in"
-          style={{ animationDelay: `${index * 0.05}s` }}
+          sx={{
+            animation: 'fadeIn 0.6s ease-out',
+            animationDelay: `${index * 0.05}s`,
+            animationFillMode: 'both',
+            display: 'flex', // Make each grid item a flex container
+          }}
         >
           <RecipeCard recipe={recipe} />
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 }

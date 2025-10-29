@@ -18,10 +18,10 @@ export default async function EditRecipePage({ params }: EditRecipePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
       <Header title="Edit Recipe" />
       <main className="mx-auto max-w-3xl p-6">
-        <div className="rounded-lg bg-white p-6 shadow-sm">
+        <div className="rounded-xl bg-card p-8 shadow-xl border-0">
           <RecipeForm recipe={recipe} isEditing={true} />
         </div>
       </main>

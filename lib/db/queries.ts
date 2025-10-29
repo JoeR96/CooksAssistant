@@ -15,6 +15,16 @@ export const recipeQueries = {
     }
   },
 
+  // Get all public recipes (for browsing without auth)
+  async getAllPublic(): Promise<Recipe[]> {
+    try {
+      return await db.select().from(recipes).orderBy(desc(recipes.createdAt));
+    } catch (error) {
+      console.error('Error fetching public recipes:', error);
+      throw new Error('Failed to fetch public recipes');
+    }
+  },
+
   // Get recipes by meal type
   async getByMealType(userId: string, mealType: MealType): Promise<Recipe[]> {
     try {
@@ -25,6 +35,19 @@ export const recipeQueries = {
     } catch (error) {
       console.error('Error fetching recipes by meal type:', error);
       throw new Error('Failed to fetch recipes by meal type');
+    }
+  },
+
+  // Get public recipes by meal type
+  async getByMealTypePublic(mealType: MealType): Promise<Recipe[]> {
+    try {
+      return await db.select()
+        .from(recipes)
+        .where(eq(recipes.mealType, mealType))
+        .orderBy(desc(recipes.createdAt));
+    } catch (error) {
+      console.error('Error fetching public recipes by meal type:', error);
+      throw new Error('Failed to fetch public recipes by meal type');
     }
   },
 
@@ -44,6 +67,22 @@ export const recipeQueries = {
     } catch (error) {
       console.error('Error searching recipes:', error);
       throw new Error('Failed to search recipes');
+    }
+  },
+
+  // Search public recipes by title or description
+  async searchPublic(searchTerm: string): Promise<Recipe[]> {
+    try {
+      return await db.select()
+        .from(recipes)
+        .where(or(
+          ilike(recipes.title, `%${searchTerm}%`),
+          ilike(recipes.description, `%${searchTerm}%`)
+        ))
+        .orderBy(desc(recipes.createdAt));
+    } catch (error) {
+      console.error('Error searching public recipes:', error);
+      throw new Error('Failed to search public recipes');
     }
   },
 
@@ -76,6 +115,20 @@ export const recipeQueries = {
     } catch (error) {
       console.error('Error fetching recipe by ID:', error);
       throw new Error('Failed to fetch recipe');
+    }
+  },
+
+  // Get single recipe by ID (public access)
+  async getByIdPublic(id: string): Promise<Recipe | null> {
+    try {
+      const result = await db.select()
+        .from(recipes)
+        .where(eq(recipes.id, id))
+        .limit(1);
+      return result[0] || null;
+    } catch (error) {
+      console.error('Error fetching public recipe by ID:', error);
+      throw new Error('Failed to fetch public recipe');
     }
   },
 

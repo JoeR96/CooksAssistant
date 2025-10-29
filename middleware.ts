@@ -1,13 +1,37 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
+// Routes that are completely public (no auth required)
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
+  '/',
+  '/dashboard',
+  '/recipes/(.*)', // All recipe pages
+]);
+
+// Routes that require authentication
+const isProtectedRoute = createRouteMatcher([
+  '/recipes/new',
+  '/recipes/(.*)/edit',
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
+  // Allow public routes without any auth check
+  if (isPublicRoute(request)) {
+    return;
+  }
+  
+  // Protect specific routes that require authentication
+  if (isProtectedRoute(request)) {
     await auth.protect();
+  }
+  
+  // For API routes, only protect non-GET requests
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    if (request.method !== 'GET') {
+      await auth.protect();
+    }
+    return;
   }
 });
 

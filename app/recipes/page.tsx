@@ -9,9 +9,9 @@ export default async function RecipesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10 p-8">
       <div className="mx-auto max-w-7xl">
-        <h1 className="text-3xl font-bold text-slate-900">Recipes</h1>
+        <h1 className="text-3xl font-bold text-foreground">Recipes</h1>
       </div>
     </div>
   );

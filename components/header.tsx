@@ -1,6 +1,17 @@
+"use client";
+
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Box, 
+  Stack,
+  Avatar,
+  useMediaQuery,
+  useTheme
+} from "@mui/material";
 import { UserProfile } from "./user-profile";
 import { AddRecipeButton } from "./add-recipe-button";
-import { ThemeDropdown } from "./theme-dropdown";
 
 interface HeaderProps {
   title: string;
@@ -9,33 +20,51 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle, showAddButton = false }: HeaderProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-background/80 border-b">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-sm">
-              <span className="text-lg">🍳</span>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-semibold tracking-tight">
+    <AppBar 
+      position="sticky" 
+      sx={{ 
+        bgcolor: 'rgba(0, 0, 0, 0.8)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: 1,
+        borderColor: 'divider',
+        boxShadow: 'none',
+      }}
+    >
+      <Toolbar sx={{ px: { xs: 2, sm: 3, lg: 4 } }}>
+        <Stack direction="row" spacing={2} alignItems="center" sx={{ flexGrow: 1 }}>
+          <Avatar
+            sx={{
+              width: 40,
+              height: 40,
+              background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+              fontSize: '1.2rem',
+            }}
+          >
+            🍳
+          </Avatar>
+          {!isMobile && (
+            <Box>
+              <Typography variant="h6" component="h1" sx={{ fontWeight: 600, letterSpacing: '-0.025em' }}>
                 {title}
-              </h1>
+              </Typography>
               {subtitle && (
-                <p className="text-sm text-muted-foreground">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
                   {subtitle}
-                </p>
+                </Typography>
               )}
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            {showAddButton && <AddRecipeButton />}
-            <ThemeDropdown />
-            <UserProfile />
-          </div>
-        </div>
-      </div>
-    </header>
+            </Box>
+          )}
+        </Stack>
+        
+        <Stack direction="row" spacing={1} alignItems="center">
+          {showAddButton && <AddRecipeButton />}
+          <UserProfile />
+        </Stack>
+      </Toolbar>
+    </AppBar>
   );
 }

@@ -18,7 +18,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  IconButton
+  IconButton,
+  Fab
 } from "@mui/material";
 import { ArrowBack, AccessTime, People, Edit, FiberManualRecord } from "@mui/icons-material";
 import { getUserId } from "@/lib/auth/utils";
@@ -63,7 +64,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
         {/* Back Button */}
         <Button
           component={Link}
-          href="/"
+          href="/dashboard"
           startIcon={<ArrowBack />}
           sx={{ mb: 3, color: 'text.secondary' }}
         >

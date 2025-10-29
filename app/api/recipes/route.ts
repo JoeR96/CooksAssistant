@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth } from "@/lib/auth/utils";
+import { requireAuth, getUserId } from "@/lib/auth/utils";
 import { recipeQueries } from "@/lib/db/queries";
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = await requireAuth();
+    const userId = await getUserId();
     const { searchParams } = new URL(request.url);
     
     const mealType = searchParams.get("mealType");
@@ -12,12 +12,24 @@ export async function GET(request: NextRequest) {
 
     let recipes;
 
-    if (search) {
-      recipes = await recipeQueries.search(userId, search);
-    } else if (mealType && mealType !== "all") {
-      recipes = await recipeQueries.getByMealType(userId, mealType as any);
+    if (userId) {
+      // Authenticated user - show their recipes
+      if (search) {
+        recipes = await recipeQueries.search(userId, search);
+      } else if (mealType && mealType !== "all") {
+        recipes = await recipeQueries.getByMealType(userId, mealType as any);
+      } else {
+        recipes = await recipeQueries.getByUserId(userId);
+      }
     } else {
-      recipes = await recipeQueries.getByUserId(userId);
+      // Public access - show all recipes
+      if (search) {
+        recipes = await recipeQueries.searchPublic(search);
+      } else if (mealType && mealType !== "all") {
+        recipes = await recipeQueries.getByMealTypePublic(mealType as any);
+      } else {
+        recipes = await recipeQueries.getAllPublic();
+      }
     }
 
     return NextResponse.json(recipes);

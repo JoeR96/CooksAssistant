@@ -1,9 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
+import { 
+  Button, 
+  TextField, 
+  InputAdornment, 
+  IconButton, 
+  Stack, 
+  Box,
+  Chip
+} from "@mui/material";
+import { Search, Clear } from "@mui/icons-material";
 
 interface FilterBarProps {
   onMealTypeChange: (mealType: string) => void;
@@ -45,48 +52,62 @@ export function FilterBar({
   };
 
   return (
-    <div className="space-y-6">
+    <Stack spacing={3}>
       {/* Meal Type Filter */}
-      <div className="flex flex-wrap gap-2">
+      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
         {mealTypes.map((type) => (
-          <Button
+          <Chip
             key={type.value}
-            variant={selectedMealType === type.value ? "default" : "outline"}
-            size="sm"
+            label={`${type.icon} ${type.label}`}
             onClick={() => onMealTypeChange(type.value)}
-            className="gap-2"
-          >
-            <span>{type.icon}</span>
-            {type.label}
-          </Button>
+            variant={selectedMealType === type.value ? "filled" : "outlined"}
+            color={selectedMealType === type.value ? "primary" : "default"}
+            sx={{
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                transform: 'translateY(-1px)',
+                boxShadow: 2,
+              }
+            }}
+          />
         ))}
-      </div>
+      </Stack>
 
       {/* Search Bar */}
-      <form onSubmit={handleSearchSubmit} className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          type="text"
+      <Box component="form" onSubmit={handleSearchSubmit} sx={{ maxWidth: 400 }}>
+        <TextField
+          fullWidth
+          size="small"
           placeholder="Search recipes..."
           value={localSearch}
           onChange={(e) => handleSearchChange(e.target.value)}
-          className="pl-10 pr-10"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+            endAdornment: localSearch && (
+              <InputAdornment position="end">
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    setLocalSearch("");
+                    onSearchChange("");
+                  }}
+                >
+                  <Clear />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+            }
+          }}
         />
-        {localSearch && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setLocalSearch("");
-              onSearchChange("");
-            }}
-            className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 p-0"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </form>
-    </div>
+      </Box>
+    </Stack>
   );
 }

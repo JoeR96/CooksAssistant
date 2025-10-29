@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ToastProvider } from "@/components/toast";
-import { ThemeProvider } from "@/components/theme-provider";
+import { MuiThemeProvider } from "@/components/mui-theme-provider";
 import { MobileNav } from "@/components/mobile-nav";
-import "./globals.css";
 
 export const metadata: Metadata = {
   title: "CooksAssistant",
@@ -25,18 +24,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className="antialiased">
-          <ThemeProvider
-            defaultTheme="system"
-            storageKey="cooks-assistant-theme"
-          >
+        <body>
+          <MuiThemeProvider>
             <ErrorBoundary>
               <ToastProvider>
                 {children}
                 <MobileNav />
               </ToastProvider>
             </ErrorBoundary>
-          </ThemeProvider>
+          </MuiThemeProvider>
         </body>
       </html>
     </ClerkProvider>
