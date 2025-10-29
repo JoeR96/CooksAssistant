@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -61,14 +60,14 @@ export default async function RecipePage({ params }: RecipePageProps) {
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Back Button */}
-        <Button
-          component={Link}
-          href="/"
-          startIcon={<ArrowBack />}
-          sx={{ mb: 3, color: 'text.secondary' }}
-        >
-          Back to Recipes
-        </Button>
+        <Link href="/" style={{ textDecoration: 'none' }}>
+          <Button
+            startIcon={<ArrowBack />}
+            sx={{ mb: 3, color: 'text.secondary' }}
+          >
+            Back to Recipes
+          </Button>
+        </Link>
 
         {/* Hero Section */}
         <Card sx={{ mb: 4, overflow: 'hidden' }}>
@@ -148,17 +147,17 @@ export default async function RecipePage({ params }: RecipePageProps) {
             {userId && recipe.createdBy === userId && (
               <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
                 <Stack direction="row" spacing={1}>
-                  <IconButton
-                    component={Link}
-                    href={`/recipes/${id}/edit`}
-                    sx={{ 
-                      bgcolor: 'rgba(255,255,255,0.9)', 
-                      color: 'black',
-                      '&:hover': { bgcolor: 'white' }
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
+                  <Link href={`/recipes/${id}/edit`} style={{ textDecoration: 'none' }}>
+                    <IconButton
+                      sx={{ 
+                        bgcolor: 'rgba(255,255,255,0.9)', 
+                        color: 'black',
+                        '&:hover': { bgcolor: 'white' }
+                      }}
+                    >
+                      <Edit />
+                    </IconButton>
+                  </Link>
                   <DeleteRecipeButton recipeId={id} recipeName={recipe.title} />
                 </Stack>
               </Box>
