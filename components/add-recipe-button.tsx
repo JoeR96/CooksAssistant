@@ -1,15 +1,27 @@
+"use client";
+
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Button, useMediaQuery, useTheme } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 export function AddRecipeButton() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <Button asChild size="sm" className="gap-2">
-      <Link href="/recipes/new">
-        <Plus className="h-4 w-4" />
-        <span className="hidden sm:inline">Add Recipe</span>
-        <span className="sm:hidden">Add</span>
-      </Link>
-    </Button>
+    <Link href="/recipes/new" style={{ textDecoration: 'none' }}>
+      <Button
+        variant="contained"
+        size="small"
+        startIcon={<Add />}
+        sx={{ 
+          borderRadius: 2,
+          textTransform: 'none',
+          fontWeight: 500,
+        }}
+      >
+        {isMobile ? 'Add' : 'Add Recipe'}
+      </Button>
+    </Link>
   );
 }
