@@ -71,7 +71,7 @@ export function ShoppingListView({ items, onItemToggle }: ShoppingListViewProps)
           >
             <input
               type="checkbox"
-              checked={item.checked}
+              checked={item.checked || false}
               onChange={(e) => handleToggle(item.id, e.target.checked)}
               className="h-5 w-5 rounded border-slate-300 text-lime-600 focus:ring-lime-500"
             />

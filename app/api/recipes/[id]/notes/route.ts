@@ -2,14 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/utils";
 import { recipeNotesQueries } from "@/lib/db/queries";
 
-interface RouteParams {
-  params: { id: string };
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
-    const notes = await recipeNotesQueries.getByRecipeId(params.id, userId);
+    const notes = await recipeNotesQueries.getByRecipeId(id, userId);
 
     return NextResponse.json(notes);
   } catch (error) {
@@ -21,7 +18,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
     const body = await request.json();
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     const newNote = await recipeNotesQueries.create({
-      recipeId: params.id,
+      recipeId: id,
       userId,
       text: text.trim(),
       imageUrl: imageUrl || null,

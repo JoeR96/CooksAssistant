@@ -45,16 +45,14 @@ export function RecipeDashboard({ initialRecipes }: RecipeDashboardProps) {
   };
 
   return (
-    <>
+    <div className="space-y-8">
       <FilterBar
         onMealTypeChange={handleMealTypeChange}
         onSearchChange={handleSearchChange}
         selectedMealType={selectedMealType}
         searchTerm={searchTerm}
       />
-      <main className="mx-auto max-w-7xl p-6">
-        <RecipeGrid recipes={recipes} isLoading={isLoading} />
-      </main>
-    </>
+      <RecipeGrid recipes={recipes} isLoading={isLoading} />
+    </div>
   );
 }

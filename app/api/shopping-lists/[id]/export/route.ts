@@ -2,11 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/utils";
 import { shoppingListQueries } from "@/lib/db/queries";
 
-interface RouteParams {
-  params: { id: string };
-}
-
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
     const body = await request.json();

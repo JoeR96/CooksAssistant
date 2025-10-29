@@ -1,171 +1,190 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Header } from "@/components/header";
+
 import { DeleteRecipeButton } from "@/components/delete-recipe-button";
 import { ShoppingListGenerator } from "@/components/shopping-list-generator";
 import { RecipeNotes } from "@/components/recipe-notes";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Clock, Users, Edit } from "lucide-react";
 import { requireAuth } from "@/lib/auth/utils";
 import { recipeQueries } from "@/lib/db/queries";
 
 interface RecipePageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function RecipePage({ params }: RecipePageProps) {
+  const { id } = await params;
   const userId = await requireAuth();
-  const recipe = await recipeQueries.getById(params.id, userId);
+  const recipe = await recipeQueries.getById(id, userId);
 
   if (!recipe) {
     notFound();
   }
 
-  const mealTypeColors = {
-    breakfast: "bg-amber-100 text-amber-800",
-    lunch: "bg-lime-100 text-lime-800",
-    dinner: "bg-slate-100 text-slate-800",
-    snack: "bg-orange-100 text-orange-800",
+  const mealTypeVariants = {
+    breakfast: "bg-orange-100 text-orange-800",
+    lunch: "bg-green-100 text-green-800",
+    dinner: "bg-blue-100 text-blue-800",
+    snack: "bg-pink-100 text-pink-800",
     other: "bg-gray-100 text-gray-800",
   };
 
+  const steps = recipe.steps ? recipe.steps.split('\n').filter(step => step.trim()) : [];
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header title={recipe.title} />
-      
-      <main className="mx-auto max-w-4xl p-6">
-        <div className="mb-6">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center text-sm text-slate-600 hover:text-slate-900"
-          >
-            <svg className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-6xl">
+        {/* Back Button */}
+        <Button variant="ghost" size="sm" asChild className="mb-6 hover:bg-primary/10">
+          <Link href="/dashboard">
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Recipes
           </Link>
-        </div>
+        </Button>
 
-        <div className="overflow-hidden rounded-lg bg-white shadow-sm">
-          {/* Recipe Header */}
-          <div className="relative">
-            {recipe.imageUrl ? (
-              <div className="aspect-video w-full overflow-hidden">
+        {/* Hero Section */}
+        <div className="relative mb-8">
+          <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-card to-card/80 backdrop-blur-sm">
+            <div className="aspect-[21/9] w-full overflow-hidden bg-muted relative">
+              {recipe.imageUrl ? (
                 <Image
                   src={recipe.imageUrl}
                   alt={recipe.title}
-                  width={800}
-                  height={450}
+                  width={1200}
+                  height={500}
                   className="h-full w-full object-cover"
+                  priority
                 />
-              </div>
-            ) : (
-              <div className="aspect-video w-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                <div className="text-slate-400">
-                  <svg className="h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-              </div>
-            )}
-            
-            {/* Action Buttons Overlay */}
-            <div className="absolute top-4 right-4 flex space-x-2">
-              <Link
-                href={`/recipes/${recipe.id}/edit`}
-                className="inline-flex items-center rounded-lg bg-white/90 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-              >
-                <svg className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Edit
-              </Link>
-              <div className="rounded-lg bg-white/90 shadow-sm">
-                <DeleteRecipeButton recipeId={recipe.id} recipeName={recipe.title} />
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6">
-            {/* Recipe Meta */}
-            <div className="mb-6 flex flex-wrap items-center gap-4">
-              <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${mealTypeColors[recipe.mealType]}`}>
-                {recipe.mealType}
-              </span>
-              
-              <div className="flex items-center text-sm text-slate-500">
-                <svg className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                {recipe.ingredients.length} ingredients
-              </div>
-
-              <div className="flex items-center text-sm text-slate-500">
-                <svg className="mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Added {new Date(recipe.createdAt).toLocaleDateString()}
-              </div>
-            </div>
-
-            {/* Description */}
-            {recipe.description && (
-              <div className="mb-6">
-                <p className="text-slate-700 leading-relaxed">{recipe.description}</p>
-              </div>
-            )}
-
-            {/* Tags */}
-            {recipe.tags && recipe.tags.length > 0 && (
-              <div className="mb-8">
-                <h3 className="mb-3 text-sm font-medium text-slate-900">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {recipe.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center rounded-md bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="grid gap-8 lg:grid-cols-2">
-              {/* Ingredients */}
-              <div>
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-slate-900">Ingredients</h2>
-                  <ShoppingListGenerator recipe={recipe} />
-                </div>
-                <ul className="space-y-2">
-                  {recipe.ingredients.map((ingredient, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="mr-3 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-slate-400" />
-                      <span className="text-slate-700">{ingredient}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Instructions */}
-              <div>
-                <h2 className="mb-4 text-lg font-semibold text-slate-900">Instructions</h2>
-                <div className="prose prose-slate max-w-none">
-                  <div className="whitespace-pre-line text-slate-700 leading-relaxed">
-                    {recipe.steps}
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5">
+                  <div className="text-center">
+                    <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">
+                      <svg className="h-10 w-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 01-1.161.886l-.143.048a1.107 1.107 0 00-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 01-1.652.928l-.679-.906a1.125 1.125 0 00-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 00-8.862 12.872M12.75 3.031a9 9 0 016.69 14.036m0 0l-.177-.529A2.25 2.25 0 0017.128 15H16.5l-.324-.324a1.453 1.453 0 00-2.328.377l-.036.073a1.586 1.586 0 01-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 01-5.276 3.67m0 0a9 9 0 01-10.275-4.835M15.75 9c0 .896-.393 1.7-1.016 2.25" />
+                      </svg>
+                    </div>
+                    <p className="text-lg font-semibold text-foreground">{recipe.title}</p>
                   </div>
                 </div>
+              )}
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              
+              {/* Action Buttons */}
+              <div className="absolute top-4 right-4 flex space-x-2">
+                <Button size="sm" asChild className="bg-white/90 text-black hover:bg-white border-0 shadow-lg">
+                  <Link href={`/recipes/${id}/edit`}>
+                    <Edit className="mr-2 h-4 w-4" />
+                    Edit
+                  </Link>
+                </Button>
+                <DeleteRecipeButton recipeId={id} recipeName={recipe.title} />
+              </div>
+              
+              {/* Title Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-0 shadow-lg">
+                    {recipe.mealType}
+                  </Badge>
+                  <div className="flex items-center gap-4 text-white/90">
+                    <div className="flex items-center gap-1 text-sm">
+                      <Users className="h-4 w-4" />
+                      <span>{recipe.ingredients.length} ingredients</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm">
+                      <Clock className="h-4 w-4" />
+                      <span>{steps.length} steps</span>
+                    </div>
+                  </div>
+                </div>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{recipe.title}</h1>
+                {recipe.description && (
+                  <p className="text-white/90 text-lg max-w-2xl">{recipe.description}</p>
+                )}
               </div>
             </div>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Tags */}
+            {recipe.tags && recipe.tags.length > 0 && (
+              <Card className="border-0 shadow-lg bg-gradient-to-r from-card to-card/80">
+                <CardContent className="p-6">
+                  <h3 className="mb-4 text-sm font-semibold text-foreground uppercase tracking-wide">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {recipe.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="px-3 py-1 bg-primary/10 text-primary border-0">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Instructions */}
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-2xl font-bold">Instructions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {steps.length > 0 ? (
+                  steps.map((step, index) => (
+                    <div key={index} className="flex gap-4 p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground text-sm font-bold flex-shrink-0 shadow-lg">
+                        {index + 1}
+                      </div>
+                      <div className="flex-1 pt-2">
+                        <p className="leading-relaxed">{step}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <p>No instructions available for this recipe.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Ingredients Sidebar */}
+          <div className="space-y-6">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-card/80 sticky top-6">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-bold">Ingredients</CardTitle>
+                  <ShoppingListGenerator recipe={recipe} />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {recipe.ingredients.map((ingredient, index) => (
+                  <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-muted/20 hover:bg-muted/40 transition-colors">
+                    <div className="mt-1 h-2 w-2 rounded-full bg-gradient-to-r from-primary to-primary/80 flex-shrink-0" />
+                    <span className="leading-relaxed">{ingredient}</span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
         </div>
 
         {/* Notes Section */}
-        <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
-          <RecipeNotes recipeId={recipe.id} />
-        </div>
-      </main>
+        <Card className="mt-6 border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
+          <CardContent className="p-6">
+            <RecipeNotes recipeId={id} />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

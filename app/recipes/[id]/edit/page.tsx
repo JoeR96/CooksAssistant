@@ -5,12 +5,13 @@ import { requireAuth } from "@/lib/auth/utils";
 import { recipeQueries } from "@/lib/db/queries";
 
 interface EditRecipePageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EditRecipePage({ params }: EditRecipePageProps) {
+  const { id } = await params;
   const userId = await requireAuth();
-  const recipe = await recipeQueries.getById(params.id, userId);
+  const recipe = await recipeQueries.getById(id, userId);
 
   if (!recipe) {
     notFound();

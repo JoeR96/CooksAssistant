@@ -2,14 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/utils";
 import { recipeQueries } from "@/lib/db/queries";
 
-interface RouteParams {
-  params: { id: string };
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
-    const recipe = await recipeQueries.getById(params.id, userId);
+    const recipe = await recipeQueries.getById(id, userId);
 
     if (!recipe) {
       return NextResponse.json(
@@ -28,14 +25,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
     const body = await request.json();
 
     const { title, description, mealType, ingredients, steps, tags, imageUrl } = body;
 
-    const updatedRecipe = await recipeQueries.update(params.id, userId, {
+    const updatedRecipe = await recipeQueries.update(id, userId, {
       title,
       description,
       mealType,
@@ -62,10 +60,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
-    const deleted = await recipeQueries.delete(params.id, userId);
+    const deleted = await recipeQueries.delete(id, userId);
 
     if (!deleted) {
       return NextResponse.json(

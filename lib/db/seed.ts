@@ -25,9 +25,10 @@ const sampleRecipes: NewRecipe[] = [
       "1 tbsp chia seeds",
       "1/4 cup sliced almonds"
     ],
-    steps: "1. Add Greek yogurt to a bowl\n2. Top with mixed berries\n3. Sprinkle granola, chia seeds, and almonds\n4. Drizzle with honey\n5. Serve immediately",
+    steps: "Add Greek yogurt to a bowl\nTop with mixed berries\nSprinkle granola, chia seeds, and almonds\nDrizzle with honey\nServe immediately",
     tags: ["healthy", "protein", "quick", "vegetarian"],
-    createdBy: "seed-user"
+    imageUrl: "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=800&h=600&fit=crop&crop=center",
+    createdBy: process.env.SEED_USER_ID || "seed-user"
   },
   {
     title: "Avocado Toast with Egg",
@@ -42,8 +43,9 @@ const sampleRecipes: NewRecipe[] = [
       "Red pepper flakes",
       "Lemon juice"
     ],
-    steps: "1. Toast bread slices\n2. Mash avocado with lemon juice, salt, and pepper\n3. Fry or poach eggs\n4. Spread avocado on toast\n5. Top with eggs\n6. Season with red pepper flakes",
+    steps: "Toast bread slices\nMash avocado with lemon juice, salt, and pepper\nFry or poach eggs\nSpread avocado on toast\nTop with eggs\nSeason with red pepper flakes",
     tags: ["healthy", "protein", "vegetarian"],
+    imageUrl: "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   },
 
@@ -65,8 +67,9 @@ const sampleRecipes: NewRecipe[] = [
       "2 tbsp fresh parsley",
       "1 tsp dried oregano"
     ],
-    steps: "1. Cook quinoa in vegetable broth until tender\n2. Let quinoa cool completely\n3. Mix cucumber, tomatoes, onion, olives, and feta\n4. Whisk olive oil, lemon juice, oregano, salt, and pepper\n5. Combine quinoa with vegetables\n6. Add dressing and parsley\n7. Chill for 30 minutes before serving",
+    steps: "Cook quinoa in vegetable broth until tender\nLet quinoa cool completely\nMix cucumber, tomatoes, onion, olives, and feta\nWhisk olive oil, lemon juice, oregano, salt, and pepper\nCombine quinoa with vegetables\nAdd dressing and parsley\nChill for 30 minutes before serving",
     tags: ["healthy", "vegetarian", "meal-prep", "mediterranean"],
+    imageUrl: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   },
   {
@@ -83,8 +86,9 @@ const sampleRecipes: NewRecipe[] = [
       "Salt and pepper",
       "Croutons (optional)"
     ],
-    steps: "1. Season and cook chicken breasts in olive oil\n2. Let chicken rest, then slice\n3. Toss lettuce with Caesar dressing\n4. Add chicken and parmesan to lettuce\n5. Place mixture in tortillas\n6. Roll tightly and slice in half",
+    steps: "Season and cook chicken breasts in olive oil\nLet chicken rest, then slice\nToss lettuce with Caesar dressing\nAdd chicken and parmesan to lettuce\nPlace mixture in tortillas\nRoll tightly and slice in half",
     tags: ["protein", "quick", "portable"],
+    imageUrl: "https://images.unsplash.com/photo-1551782450-17144efb9c50?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   },
 
@@ -104,8 +108,9 @@ const sampleRecipes: NewRecipe[] = [
       "Salt and pepper",
       "Green onions for garnish"
     ],
-    steps: "1. Preheat oven to 400°F\n2. Mix honey, soy sauce, garlic, ginger, and lemon juice\n3. Season salmon with salt and pepper\n4. Heat olive oil in oven-safe pan\n5. Sear salmon skin-side up for 3 minutes\n6. Flip and brush with glaze\n7. Bake for 8-10 minutes\n8. Garnish with green onions",
+    steps: "Preheat oven to 400°F\nMix honey, soy sauce, garlic, ginger, and lemon juice\nSeason salmon with salt and pepper\nHeat olive oil in oven-safe pan\nSear salmon skin-side up for 3 minutes\nFlip and brush with glaze\nBake for 8-10 minutes\nGarnish with green onions",
     tags: ["healthy", "protein", "quick", "gluten-free"],
+    imageUrl: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   },
   {
@@ -126,8 +131,9 @@ const sampleRecipes: NewRecipe[] = [
       "2 green onions, chopped",
       "Sesame seeds for garnish"
     ],
-    steps: "1. Heat oil in large wok or pan\n2. Add garlic and ginger, stir for 30 seconds\n3. Add harder vegetables first (carrots, broccoli)\n4. Add bell pepper and snap peas\n5. Mix soy sauce, sesame oil, and cornstarch\n6. Add sauce to vegetables\n7. Stir fry until vegetables are crisp-tender\n8. Garnish with green onions and sesame seeds",
+    steps: "Heat oil in large wok or pan\nAdd garlic and ginger, stir for 30 seconds\nAdd harder vegetables first (carrots, broccoli)\nAdd bell pepper and snap peas\nMix soy sauce, sesame oil, and cornstarch\nAdd sauce to vegetables\nStir fry until vegetables are crisp-tender\nGarnish with green onions and sesame seeds",
     tags: ["vegetarian", "healthy", "quick", "vegan"],
+    imageUrl: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   },
 
@@ -145,8 +151,9 @@ const sampleRecipes: NewRecipe[] = [
       "1 tsp vanilla extract",
       "Pinch of salt"
     ],
-    steps: "1. Mix all ingredients in a large bowl\n2. Stir until well combined\n3. Refrigerate for 30 minutes\n4. Roll mixture into 1-inch balls\n5. Store in refrigerator for up to 1 week",
+    steps: "Mix all ingredients in a large bowl\nStir until well combined\nRefrigerate for 30 minutes\nRoll mixture into 1-inch balls\nStore in refrigerator for up to 1 week",
     tags: ["healthy", "no-bake", "protein", "vegetarian"],
+    imageUrl: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   },
   {
@@ -159,20 +166,34 @@ const sampleRecipes: NewRecipe[] = [
       "1 tsp cinnamon",
       "1 tbsp chopped walnuts (optional)"
     ],
-    steps: "1. Wash and core apples\n2. Cut into thin slices\n3. Arrange on plate\n4. Serve with almond butter for dipping\n5. Sprinkle with cinnamon and walnuts if desired",
+    steps: "Wash and core apples\nCut into thin slices\nArrange on plate\nServe with almond butter for dipping\nSprinkle with cinnamon and walnuts if desired",
     tags: ["healthy", "quick", "vegetarian", "gluten-free"],
+    imageUrl: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=800&h=600&fit=crop&crop=center",
     createdBy: "seed-user"
   }
 ];
 
-export async function seedDatabase() {
+export async function seedDatabase(userId?: string) {
   try {
     console.log('Starting database seeding...');
     
-    // Insert sample recipes
-    const insertedRecipes = await db.insert(recipes).values(sampleRecipes).returning();
+    // Use provided userId or default
+    const targetUserId = userId || process.env.SEED_USER_ID || "seed-user";
     
-    console.log(`Successfully seeded ${insertedRecipes.length} recipes`);
+    // Clear existing recipes
+    console.log('Clearing existing recipes...');
+    await db.delete(recipes);
+    
+    // Update all recipes to use the target user ID
+    const recipesWithUserId = sampleRecipes.map(recipe => ({
+      ...recipe,
+      createdBy: targetUserId
+    }));
+    
+    // Insert sample recipes
+    const insertedRecipes = await db.insert(recipes).values(recipesWithUserId).returning();
+    
+    console.log(`Successfully seeded ${insertedRecipes.length} recipes for user: ${targetUserId}`);
     console.log('Database seeding completed!');
     
     return insertedRecipes;

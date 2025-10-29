@@ -2,18 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/utils";
 import { shoppingListQueries } from "@/lib/db/queries";
 
-interface RouteParams {
-  params: { id: string; itemId: string };
-}
-
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string; itemId: string }> }) {
+  const { id, itemId } = await params;
   try {
     const userId = await requireAuth();
     const body = await request.json();
     const { checked } = body;
 
     const updatedItem = await shoppingListQueries.updateCheckedStatus(
-      params.itemId,
+      itemId,
       userId,
       checked
     );

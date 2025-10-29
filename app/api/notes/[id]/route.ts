@@ -2,17 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/utils";
 import { recipeNotesQueries } from "@/lib/db/queries";
 
-interface RouteParams {
-  params: { id: string };
-}
-
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
     const body = await request.json();
     const { text, imageUrl } = body;
 
-    const updatedNote = await recipeNotesQueries.update(params.id, userId, {
+    const updatedNote = await recipeNotesQueries.update(id, userId, {
       text,
       imageUrl,
     });
@@ -34,10 +31,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const userId = await requireAuth();
-    const deleted = await recipeNotesQueries.delete(params.id, userId);
+    const deleted = await recipeNotesQueries.delete(id, userId);
 
     if (!deleted) {
       return NextResponse.json(

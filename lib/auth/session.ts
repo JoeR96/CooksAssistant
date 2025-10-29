@@ -11,7 +11,8 @@ export async function getUserSession() {
       return null;
     }
 
-    const user = await clerkClient.users.getUser(userId);
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
     
     return {
       userId,
