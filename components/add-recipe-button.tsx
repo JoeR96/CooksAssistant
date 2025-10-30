@@ -1,19 +1,22 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { Button, useMediaQuery, useTheme } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { RecipeFormModal } from "./recipe-form-modal";
 
 export function AddRecipeButton() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Link href="/recipes/new" style={{ textDecoration: 'none' }}>
+    <>
       <Button
         variant="contained"
         size="small"
         startIcon={<Add />}
+        onClick={() => setIsModalOpen(true)}
         sx={{ 
           borderRadius: 2,
           textTransform: 'none',
@@ -22,6 +25,11 @@ export function AddRecipeButton() {
       >
         {isMobile ? 'Add' : 'Add Recipe'}
       </Button>
-    </Link>
+      
+      <RecipeFormModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 }

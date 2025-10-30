@@ -1,98 +1,180 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { 
+  IconButton, 
+  Menu, 
+  MenuItem, 
+  ListItemIcon, 
+  ListItemText,
+  Typography,
+  Box,
+  Tooltip,
+  Fade,
+  alpha,
+  useTheme as useMuiTheme
+} from "@mui/material";
+import { 
+  LightMode, 
+  DarkMode, 
+  Computer,
+  Palette,
+  Check,
+  KeyboardArrowDown
+} from "@mui/icons-material";
 import { useTheme } from "./theme-provider";
 
 const themes = [
-  { value: "light", label: "Light", icon: "☀️", description: "Clean & bright" },
-  { value: "dark", label: "Dark", icon: "🌙", description: "Easy on the eyes" },
-  { value: "neon", label: "Neon", icon: "⚡", description: "Electric vibes" },
-  { value: "retro", label: "Retro", icon: "📺", description: "80s nostalgia" },
-  { value: "cyberpunk", label: "Cyberpunk", icon: "🤖", description: "Future noir" },
-  { value: "synthwave", label: "Synthwave", icon: "🌆", description: "Neon dreams" },
-  { value: "system", label: "System", icon: "💻", description: "Follow system" },
+  { value: "light", label: "Light", icon: LightMode, description: "Clean & bright" },
+  { value: "dark", label: "Dark", icon: DarkMode, description: "Easy on the eyes" },
+  { value: "system", label: "System", icon: Computer, description: "Follow system" },
 ];
 
 export function ThemeDropdown() {
   const { theme, setTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const muiTheme = useMuiTheme();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const currentTheme = themes.find(t => t.value === theme) || themes[0];
+  const CurrentIcon = currentTheme.icon;
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleThemeSelect = (themeValue: string) => {
+    setTheme(themeValue as any);
+    handleClose();
+  };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 neon:border-cyan-400/30 neon:bg-slate-900 neon:text-cyan-400 neon:hover:bg-slate-800 retro:border-amber-400/30 retro:bg-amber-900 retro:text-amber-400 retro:hover:bg-amber-800 cyberpunk:border-purple-400/30 cyberpunk:bg-slate-900 cyberpunk:text-purple-400 cyberpunk:hover:bg-slate-800 synthwave:border-pink-400/30 synthwave:bg-slate-900 synthwave:text-pink-400 synthwave:hover:bg-slate-800 transition-all duration-200 hover:scale-105"
-        aria-label="Select theme"
-      >
-        <span className="text-lg">{currentTheme.icon}</span>
-        <svg 
-          className="absolute -bottom-1 -right-1 h-3 w-3 text-slate-400" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
+    <>
+      <Tooltip title="Change theme" arrow>
+        <IconButton
+          onClick={handleClick}
+          size="small"
+          sx={{
+            border: `1px solid ${alpha(muiTheme.palette.divider, 0.2)}`,
+            backgroundColor: alpha(muiTheme.palette.background.paper, 0.8),
+            '&:hover': {
+              backgroundColor: alpha(muiTheme.palette.background.paper, 1),
+              transform: 'scale(1.05)',
+            },
+            transition: 'all 0.2s ease-in-out',
+            position: 'relative',
+          }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+          <CurrentIcon sx={{ fontSize: 18 }} />
+          <KeyboardArrowDown 
+            sx={{ 
+              fontSize: 12, 
+              position: 'absolute', 
+              bottom: -2, 
+              right: -2,
+              opacity: 0.6
+            }} 
+          />
+        </IconButton>
+      </Tooltip>
 
-      {isOpen && (
-        <div className="absolute right-0 top-12 z-50 w-64 rounded-xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-2xl dark:border-slate-700 dark:bg-slate-800/95 neon:border-cyan-400/20 neon:bg-slate-900/95 neon:shadow-cyan-500/20 retro:border-amber-400/20 retro:bg-amber-900/95 retro:shadow-amber-500/20 cyberpunk:border-purple-400/20 cyberpunk:bg-slate-900/95 cyberpunk:shadow-purple-500/20 synthwave:border-pink-400/20 synthwave:bg-slate-900/95 synthwave:shadow-pink-500/20 animate-scale-in">
-          <div className="p-2">
-            <div className="mb-2 px-3 py-2">
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-white neon:text-cyan-400 retro:text-amber-400 cyberpunk:text-purple-400 synthwave:text-pink-400">
-                Choose Theme
-              </h3>
-            </div>
-            {themes.map((themeOption) => (
-              <button
-                key={themeOption.value}
-                onClick={() => {
-                  setTheme(themeOption.value as any);
-                  setIsOpen(false);
-                }}
-                className={`w-full rounded-lg px-3 py-2.5 text-left transition-all duration-200 hover:scale-[1.02] ${
-                  theme === themeOption.value
-                    ? "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg neon:from-cyan-500 neon:to-blue-500 retro:from-amber-500 retro:to-orange-500 cyberpunk:from-purple-500 cyberpunk:to-pink-500 synthwave:from-pink-500 synthwave:to-purple-500"
-                    : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 neon:text-cyan-300 neon:hover:bg-slate-800 retro:text-amber-300 retro:hover:bg-amber-800 cyberpunk:text-purple-300 cyberpunk:hover:bg-slate-800 synthwave:text-pink-300 synthwave:hover:bg-slate-800"
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <span className="text-lg">{themeOption.icon}</span>
-                  <div className="flex-1">
-                    <div className="font-medium">{themeOption.label}</div>
-                    <div className={`text-xs ${
-                      theme === themeOption.value 
-                        ? "text-white/80" 
-                        : "text-slate-500 dark:text-slate-400 neon:text-cyan-400/70 retro:text-amber-400/70 cyberpunk:text-purple-400/70 synthwave:text-pink-400/70"
-                    }`}>
-                      {themeOption.description}
-                    </div>
-                  </div>
-                  {theme === themeOption.value && (
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: 2,
+            minWidth: 200,
+            backgroundColor: alpha(muiTheme.palette.background.paper, 0.95),
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${alpha(muiTheme.palette.divider, 0.1)}`,
+            boxShadow: muiTheme.shadows[8],
+          },
+        }}
+      >
+        <Box sx={{ px: 2, py: 1, borderBottom: `1px solid ${muiTheme.palette.divider}` }}>
+          <Typography variant="subtitle2" fontWeight={600} color="text.primary">
+            Choose Theme
+          </Typography>
+        </Box>
+        
+        {themes.map((themeOption) => {
+          const IconComponent = themeOption.icon;
+          const isSelected = theme === themeOption.value;
+          
+          return (
+            <MenuItem
+              key={themeOption.value}
+              onClick={() => handleThemeSelect(themeOption.value)}
+              sx={{
+                py: 1.5,
+                px: 2,
+                borderRadius: 1,
+                mx: 1,
+                my: 0.5,
+                backgroundColor: isSelected 
+                  ? alpha(muiTheme.palette.primary.main, 0.1)
+                  : 'transparent',
+                '&:hover': {
+                  backgroundColor: isSelected 
+                    ? alpha(muiTheme.palette.primary.main, 0.2)
+                    : alpha(muiTheme.palette.action.hover, 0.8),
+                  transform: 'scale(1.02)',
+                },
+                transition: 'all 0.2s ease-in-out',
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 36 }}>
+                <IconComponent 
+                  sx={{ 
+                    fontSize: 20,
+                    color: isSelected ? 'primary.main' : 'text.secondary'
+                  }} 
+                />
+              </ListItemIcon>
+              
+              <ListItemText
+                primary={
+                  <Typography 
+                    variant="body2" 
+                    fontWeight={isSelected ? 600 : 400}
+                    color={isSelected ? 'primary.main' : 'text.primary'}
+                  >
+                    {themeOption.label}
+                  </Typography>
+                }
+                secondary={
+                  <Typography 
+                    variant="caption" 
+                    color="text.secondary"
+                    sx={{ opacity: 0.8 }}
+                  >
+                    {themeOption.description}
+                  </Typography>
+                }
+              />
+              
+              {isSelected && (
+                <Check 
+                  sx={{ 
+                    fontSize: 16, 
+                    color: 'primary.main',
+                    ml: 1
+                  }} 
+                />
+              )}
+            </MenuItem>
+          );
+        })}
+      </Menu>
+    </>
   );
 }

@@ -5,13 +5,15 @@ import {
   Toolbar, 
   Typography, 
   Box, 
-  Stack,
+  Container,
   Avatar,
-  useMediaQuery,
-  useTheme
+  useTheme,
+  alpha
 } from "@mui/material";
+import { Restaurant } from "@mui/icons-material";
 import { UserProfile } from "./user-profile";
 import { AddRecipeButton } from "./add-recipe-button";
+import { ThemeDropdown } from "./theme-dropdown";
 
 interface HeaderProps {
   title: string;
@@ -21,50 +23,78 @@ interface HeaderProps {
 
 export function Header({ title, subtitle, showAddButton = false }: HeaderProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <AppBar 
       position="sticky" 
-      sx={{ 
-        bgcolor: 'rgba(0, 0, 0, 0.8)',
+      elevation={0}
+      sx={{
+        backgroundColor: alpha(theme.palette.background.paper, 0.8),
         backdropFilter: 'blur(20px)',
-        borderBottom: 1,
-        borderColor: 'divider',
-        boxShadow: 'none',
+        borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
       }}
     >
-      <Toolbar sx={{ px: { xs: 2, sm: 3, lg: 4 } }}>
-        <Stack direction="row" spacing={2} alignItems="center" sx={{ flexGrow: 1 }}>
-          <Avatar
-            sx={{
-              width: 40,
-              height: 40,
-              background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
-              fontSize: '1.2rem',
-            }}
-          >
-            🍳
-          </Avatar>
-          {!isMobile && (
+      <Container maxWidth="xl">
+        <Toolbar 
+          sx={{ 
+            minHeight: { xs: 64, sm: 80 },
+            px: { xs: 2, sm: 3 },
+            justifyContent: 'space-between'
+          }}
+        >
+          {/* Left side - Logo and Title */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar
+              sx={{
+                width: { xs: 40, sm: 48 },
+                height: { xs: 40, sm: 48 },
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                boxShadow: theme.shadows[4],
+              }}
+            >
+              <Restaurant sx={{ fontSize: { xs: 20, sm: 24 } }} />
+            </Avatar>
+            
             <Box>
-              <Typography variant="h6" component="h1" sx={{ fontWeight: 600, letterSpacing: '-0.025em' }}>
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  fontWeight: 700,
+                  color: 'text.primary',
+                  fontSize: { xs: '1.25rem', sm: '1.5rem' },
+                  lineHeight: 1.2,
+                }}
+              >
                 {title}
               </Typography>
               {subtitle && (
-                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.875rem' }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    fontWeight: 500,
+                    fontSize: '0.875rem',
+                  }}
+                >
                   {subtitle}
                 </Typography>
               )}
             </Box>
-          )}
-        </Stack>
-        
-        <Stack direction="row" spacing={1} alignItems="center">
-          {showAddButton && <AddRecipeButton />}
-          <UserProfile />
-        </Stack>
-      </Toolbar>
+          </Box>
+
+          {/* Right side - Actions */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: { xs: 1, sm: 2 }
+          }}>
+            {showAddButton && <AddRecipeButton />}
+            <ThemeDropdown />
+            <UserProfile />
+          </Box>
+        </Toolbar>
+      </Container>
     </AppBar>
   );
 }

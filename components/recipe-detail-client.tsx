@@ -1,9 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+"use client";
 
-import { DeleteRecipeButton } from "@/components/delete-recipe-button";
-import { RecipeNotes } from "@/components/recipe-notes";
+import { useState } from "react";
+import Link from "next/link";
 import { 
   Card, 
   CardContent, 
@@ -19,35 +17,21 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
-  Fab
 } from "@mui/material";
 import { ArrowBack, AccessTime, People, Edit, FiberManualRecord } from "@mui/icons-material";
-import { getUserId } from "@/lib/auth/utils";
-import { recipeQueries } from "@/lib/db/queries";
+import { Recipe } from "@/lib/db/types";
+import { DeleteRecipeButton } from "./delete-recipe-button";
+import { RecipeNotes } from "./recipe-notes";
+import { RecipeFormModal } from "./recipe-form-modal";
 
-interface RecipePageProps {
-  params: Promise<{ id: string }>;
+interface RecipeDetailClientProps {
+  recipe: Recipe;
+  userId: string | null;
 }
 
-export default async function RecipePage({ params }: RecipePageProps) {
-  const { id } = await params;
-  const userId = await getUserId();
+export function RecipeDetailClient({ recipe, userId }: RecipeDetailClientProps) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
-  // Try to get recipe with user context first, then fall back to public access
-  let recipe = null;
-  if (userId) {
-    recipe = await recipeQueries.getById(id, userId);
-  }
-  
-  // If not found with user context or no user, try public access
-  if (!recipe) {
-    recipe = await recipeQueries.getByIdPublic(id);
-  }
-
-  if (!recipe) {
-    notFound();
-  }
-
   const steps = recipe.steps ? recipe.steps.split('\n').filter(step => step.trim()) : [];
 
   const mealTypeColors = {
@@ -57,6 +41,8 @@ export default async function RecipePage({ params }: RecipePageProps) {
     snack: '#ec4899',
     other: '#6b7280',
   };
+
+  const canEdit = userId && recipe.createdBy === userId;
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -146,12 +132,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
             </Box>
 
             {/* Action Buttons - Only show for recipe owner */}
-            {userId && recipe.createdBy === userId && (
+            {canEdit && (
               <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
                 <Stack direction="row" spacing={1}>
                   <IconButton
-                    component={Link}
-                    href={`/recipes/${id}/edit`}
+                    onClick={() => setIsEditModalOpen(true)}
                     sx={{ 
                       bgcolor: 'rgba(255,255,255,0.9)', 
                       color: 'black',
@@ -160,7 +145,7 @@ export default async function RecipePage({ params }: RecipePageProps) {
                   >
                     <Edit />
                   </IconButton>
-                  <DeleteRecipeButton recipeId={id} recipeName={recipe.title} />
+                  <DeleteRecipeButton recipeId={recipe.id} recipeName={recipe.title} />
                 </Stack>
               </Box>
             )}
@@ -240,12 +225,22 @@ export default async function RecipePage({ params }: RecipePageProps) {
           {userId && (
             <Card>
               <CardContent>
-                <RecipeNotes recipeId={id} />
+                <RecipeNotes recipeId={recipe.id} />
               </CardContent>
             </Card>
           )}
         </Stack>
       </Container>
+
+      {/* Edit Modal */}
+      {canEdit && (
+        <RecipeFormModal
+          open={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          recipe={recipe}
+          isEditing={true}
+        />
+      )}
     </Box>
   );
 }

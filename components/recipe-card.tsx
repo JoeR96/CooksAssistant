@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { Recipe } from "@/lib/db/types";
 import { 
   Card, 
@@ -7,15 +10,22 @@ import {
   Typography, 
   Chip, 
   Box,
-  Stack
+  Stack,
+  IconButton,
+  Tooltip
 } from "@mui/material";
-import { AccessTime, People } from "@mui/icons-material";
+import { AccessTime, People, Edit } from "@mui/icons-material";
+import { RecipeFormModal } from "./recipe-form-modal";
+import { useUserSession } from "@/lib/auth/hooks";
 
 interface RecipeCardProps {
   recipe: Recipe;
 }
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
+  const { userId } = useUserSession();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
   const mealTypeVariants = {
     breakfast: "bg-gradient-to-r from-orange-500 to-amber-500 text-white",
     lunch: "bg-gradient-to-r from-green-500 to-emerald-500 text-white", 
@@ -25,8 +35,16 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   };
 
   const steps = recipe.steps ? recipe.steps.split('\n').filter(step => step.trim()) : [];
+  const canEdit = userId && recipe.createdBy === userId;
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsEditModalOpen(true);
+  };
 
   return (
+    <>
     <Link href={`/recipes/${recipe.id}`} style={{ textDecoration: 'none', display: 'flex', width: '100%', height: '100%' }}>
       <Card 
         sx={{ 
@@ -107,6 +125,31 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               textTransform: 'capitalize',
             }}
           />
+
+          {/* Edit Button - Only show for recipe owner */}
+          {canEdit && (
+            <Tooltip title="Edit Recipe" arrow>
+              <IconButton
+                onClick={handleEditClick}
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  color: 'text.primary',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    transform: 'scale(1.1)',
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                  boxShadow: 2,
+                }}
+                size="small"
+              >
+                <Edit fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
 
         <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2, minHeight: 120 }}>
@@ -196,5 +239,16 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
         </CardContent>
       </Card>
     </Link>
+    
+    {/* Edit Modal */}
+    {canEdit && (
+      <RecipeFormModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        recipe={recipe}
+        isEditing={true}
+      />
+    )}
+  </>
   );
 }
