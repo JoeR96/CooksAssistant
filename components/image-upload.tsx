@@ -60,14 +60,16 @@ export function ImageUpload({ value, onChange, label = "Recipe Image" }: ImageUp
       });
 
       if (!response.ok) {
-        throw new Error('Upload failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
       }
 
       const data = await response.json();
       onChange(data.url);
     } catch (err) {
       console.error('Upload error:', err);
-      setError('Failed to upload image. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to upload image. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsUploading(false);
     }

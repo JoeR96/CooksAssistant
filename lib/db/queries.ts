@@ -1,7 +1,7 @@
 import { eq, and, or, desc, ilike, inArray } from 'drizzle-orm';
 import { db } from './index';
-import { recipes, shoppingListItems, recipeNotes } from './schema';
-import { Recipe, NewRecipe, ShoppingListItem, NewShoppingListItem, RecipeNote, NewRecipeNote, MealType } from './types';
+import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist } from './schema';
+import { Recipe, NewRecipe, ShoppingListItem, NewShoppingListItem, RecipeNote, NewRecipeNote, MealType, RecipeCategory, NewRecipeCategory, RecipeCategoryItem, NewRecipeCategoryItem, CategoryIngredientChecklist, NewCategoryIngredientChecklist, CategoryWithRecipes, CategoryType } from './types';
 
 // Recipe queries
 export const recipeQueries = {
@@ -170,6 +170,28 @@ export const recipeQueries = {
       console.error('Error deleting recipe:', error);
       throw new Error('Failed to delete recipe');
     }
+  },
+
+  // Get recipes by category
+  async getByCategory(userId: string, categoryType: CategoryType): Promise<Recipe[]> {
+    try {
+      const result = await db.select({
+        recipe: recipes,
+      })
+        .from(recipeCategoryItems)
+        .innerJoin(recipes, eq(recipeCategoryItems.recipeId, recipes.id))
+        .innerJoin(recipeCategories, eq(recipeCategoryItems.categoryId, recipeCategories.id))
+        .where(and(
+          eq(recipeCategoryItems.userId, userId),
+          eq(recipeCategories.type, categoryType)
+        ))
+        .orderBy(desc(recipes.createdAt));
+      
+      return result.map(r => r.recipe);
+    } catch (error) {
+      console.error('Error fetching recipes by category:', error);
+      throw new Error('Failed to fetch recipes by category');
+    }
   }
 };
 
@@ -278,6 +300,282 @@ export const recipeNotesQueries = {
     } catch (error) {
       console.error('Error deleting recipe note:', error);
       throw new Error('Failed to delete recipe note');
+    }
+  }
+};
+
+// Recipe category queries
+export const recipeCategoryQueries = {
+  // Get all categories for a user
+  async getByUserId(userId: string): Promise<RecipeCategory[]> {
+    try {
+      return await db.select()
+        .from(recipeCategories)
+        .where(eq(recipeCategories.userId, userId))
+        .orderBy(desc(recipeCategories.createdAt));
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      throw new Error('Failed to fetch categories');
+    }
+  },
+
+  // Get categories by type
+  async getByType(userId: string, type: CategoryType): Promise<RecipeCategory[]> {
+    try {
+      return await db.select()
+        .from(recipeCategories)
+        .where(and(eq(recipeCategories.userId, userId), eq(recipeCategories.type, type)))
+        .orderBy(desc(recipeCategories.createdAt));
+    } catch (error) {
+      console.error('Error fetching categories by type:', error);
+      throw new Error('Failed to fetch categories by type');
+    }
+  },
+
+  // Create new category
+  async create(category: NewRecipeCategory): Promise<RecipeCategory> {
+    try {
+      const result = await db.insert(recipeCategories).values(category).returning();
+      return result[0];
+    } catch (error) {
+      console.error('Error creating category:', error);
+      throw new Error('Failed to create category');
+    }
+  },
+
+  // Get category with recipes
+  async getWithRecipes(categoryId: string, userId: string): Promise<CategoryWithRecipes | null> {
+    try {
+      // Get category
+      const categoryResult = await db.select()
+        .from(recipeCategories)
+        .where(and(eq(recipeCategories.id, categoryId), eq(recipeCategories.userId, userId)))
+        .limit(1);
+      
+      if (!categoryResult[0]) return null;
+      
+      // Get recipes in this category
+      const recipesResult = await db.select({
+        recipe: recipes,
+      })
+        .from(recipeCategoryItems)
+        .innerJoin(recipes, eq(recipeCategoryItems.recipeId, recipes.id))
+        .where(and(eq(recipeCategoryItems.categoryId, categoryId), eq(recipeCategoryItems.userId, userId)));
+      
+      // Get ingredient checklist counts
+      const checklistResult = await db.select()
+        .from(categoryIngredientChecklist)
+        .where(and(eq(categoryIngredientChecklist.categoryId, categoryId), eq(categoryIngredientChecklist.userId, userId)));
+      
+      const ingredientCount = checklistResult.length;
+      const checkedIngredientCount = checklistResult.filter(item => item.checked).length;
+      
+      return {
+        ...categoryResult[0],
+        recipes: recipesResult.map(r => r.recipe),
+        ingredientCount,
+        checkedIngredientCount,
+      };
+    } catch (error) {
+      console.error('Error fetching category with recipes:', error);
+      throw new Error('Failed to fetch category with recipes');
+    }
+  },
+
+  // Delete category
+  async delete(categoryId: string, userId: string): Promise<boolean> {
+    try {
+      const result = await db.delete(recipeCategories)
+        .where(and(eq(recipeCategories.id, categoryId), eq(recipeCategories.userId, userId)))
+        .returning();
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      throw new Error('Failed to delete category');
+    }
+  }
+};
+
+// Recipe category items queries
+export const recipeCategoryItemQueries = {
+  // Add recipe to category
+  async addRecipeToCategory(categoryId: string, recipeId: string, userId: string): Promise<RecipeCategoryItem> {
+    try {
+      console.log('Adding recipe to category - categoryId:', categoryId, 'recipeId:', recipeId, 'userId:', userId);
+      
+      if (!categoryId || !recipeId || !userId) {
+        throw new Error('CategoryId, recipeId, and userId are required for adding');
+      }
+      
+      const result = await db.insert(recipeCategoryItems).values({
+        categoryId,
+        recipeId,
+        userId,
+      }).returning();
+      
+      console.log('Add result:', result.length, 'rows created');
+      return result[0];
+    } catch (error) {
+      console.error('Error adding recipe to category:', error);
+      throw new Error('Failed to add recipe to category');
+    }
+  },
+
+  // Remove recipe from category
+  async removeRecipeFromCategory(categoryId: string, recipeId: string, userId: string): Promise<boolean> {
+    try {
+      console.log('Removing recipe from category - categoryId:', categoryId, 'recipeId:', recipeId, 'userId:', userId);
+      
+      if (!categoryId || !recipeId || !userId) {
+        throw new Error('CategoryId, recipeId, and userId are required for removal');
+      }
+      
+      const result = await db.delete(recipeCategoryItems)
+        .where(and(
+          eq(recipeCategoryItems.categoryId, categoryId),
+          eq(recipeCategoryItems.recipeId, recipeId),
+          eq(recipeCategoryItems.userId, userId)
+        ))
+        .returning();
+      
+      console.log('Removal result:', result.length, 'rows affected');
+      return result.length > 0;
+    } catch (error) {
+      console.error('Error removing recipe from category:', error);
+      throw new Error('Failed to remove recipe from category');
+    }
+  },
+
+  // Get categories for a recipe
+  async getCategoriesForRecipe(recipeId: string, userId: string): Promise<RecipeCategory[]> {
+    try {
+      console.log('Getting categories for recipeId:', recipeId, 'userId:', userId);
+      
+      if (!recipeId || !userId) {
+        throw new Error('RecipeId and userId are required');
+      }
+      
+      const result = await db.select({
+        category: recipeCategories,
+      })
+        .from(recipeCategoryItems)
+        .innerJoin(recipeCategories, eq(recipeCategoryItems.categoryId, recipeCategories.id))
+        .where(and(eq(recipeCategoryItems.recipeId, recipeId), eq(recipeCategoryItems.userId, userId)));
+      
+      console.log('Found categories:', result.length);
+      return result.map(r => r.category);
+    } catch (error) {
+      console.error('Error fetching categories for recipe:', error);
+      throw new Error('Failed to fetch categories for recipe');
+    }
+  }
+};
+
+// Category ingredient checklist queries
+export const categoryIngredientChecklistQueries = {
+  // Get checklist for category
+  async getByCategory(categoryId: string, userId: string): Promise<CategoryIngredientChecklist[]> {
+    try {
+      console.log('Fetching checklist for categoryId:', categoryId, 'userId:', userId);
+      
+      if (!categoryId || !userId) {
+        throw new Error('CategoryId and userId are required');
+      }
+      
+      return await db.select()
+        .from(categoryIngredientChecklist)
+        .where(and(eq(categoryIngredientChecklist.categoryId, categoryId), eq(categoryIngredientChecklist.userId, userId)))
+        .orderBy(categoryIngredientChecklist.ingredient);
+    } catch (error) {
+      console.error('Error fetching category checklist:', error);
+      throw new Error('Failed to fetch category checklist');
+    }
+  },
+
+  // Update ingredient checked status
+  async updateCheckedStatus(id: string, userId: string, checked: boolean): Promise<CategoryIngredientChecklist | null> {
+    try {
+      if (!id || !userId) {
+        throw new Error('ID and userId are required');
+      }
+      
+      const result = await db.update(categoryIngredientChecklist)
+        .set({ checked, updatedAt: new Date() })
+        .where(and(eq(categoryIngredientChecklist.id, id), eq(categoryIngredientChecklist.userId, userId)))
+        .returning();
+      return result[0] || null;
+    } catch (error) {
+      console.error('Error updating ingredient checked status:', error);
+      throw new Error('Failed to update ingredient checked status');
+    }
+  },
+
+  // Regenerate checklist for category
+  async regenerateForCategory(categoryId: string, userId: string): Promise<CategoryIngredientChecklist[]> {
+    try {
+      console.log('Regenerating checklist for categoryId:', categoryId, 'userId:', userId);
+      
+      if (!categoryId || !userId) {
+        throw new Error('CategoryId and userId are required for regeneration');
+      }
+
+      // First, delete existing checklist
+      await db.delete(categoryIngredientChecklist)
+        .where(and(eq(categoryIngredientChecklist.categoryId, categoryId), eq(categoryIngredientChecklist.userId, userId)));
+
+      // Get all recipes in this category
+      const recipesResult = await db.select({
+        recipe: recipes,
+      })
+        .from(recipeCategoryItems)
+        .innerJoin(recipes, eq(recipeCategoryItems.recipeId, recipes.id))
+        .where(and(eq(recipeCategoryItems.categoryId, categoryId), eq(recipeCategoryItems.userId, userId)));
+
+      console.log('Found recipes in category:', recipesResult.length);
+
+      // Aggregate ingredients from all recipes
+      const ingredientMap = new Map<string, { quantity: string, sources: string[] }>();
+      
+      recipesResult.forEach(({ recipe }) => {
+        if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+          recipe.ingredients.forEach((ingredient: string) => {
+            if (ingredient && ingredient.trim()) {
+              const existing = ingredientMap.get(ingredient);
+              if (existing) {
+                existing.sources.push(recipe.title);
+              } else {
+                ingredientMap.set(ingredient, {
+                  quantity: '', // We'll parse quantity from ingredient string if needed
+                  sources: [recipe.title]
+                });
+              }
+            }
+          });
+        }
+      });
+
+      console.log('Unique ingredients found:', ingredientMap.size);
+
+      // Create new checklist items
+      const newItems: NewCategoryIngredientChecklist[] = Array.from(ingredientMap.entries()).map(([ingredient, data]) => ({
+        categoryId,
+        ingredient,
+        quantity: data.quantity || null,
+        checked: false,
+        userId,
+      }));
+
+      if (newItems.length > 0) {
+        const result = await db.insert(categoryIngredientChecklist).values(newItems).returning();
+        console.log('Created checklist items:', result.length);
+        return result;
+      }
+      
+      console.log('No ingredients to add to checklist');
+      return [];
+    } catch (error) {
+      console.error('Error regenerating category checklist:', error);
+      throw new Error('Failed to regenerate category checklist');
     }
   }
 };

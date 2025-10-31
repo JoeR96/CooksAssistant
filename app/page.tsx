@@ -35,6 +35,7 @@ export default async function Home() {
       />
       
       <Box sx={{ maxWidth: '1400px', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 }, py: 4 }}>
+
         <RecipeDashboard initialRecipes={recipes} />
       </Box>
     </Box>

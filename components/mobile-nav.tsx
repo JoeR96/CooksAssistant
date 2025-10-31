@@ -10,6 +10,7 @@ export function MobileNav() {
 
   const navigation = [
     { name: "Recipes", href: "/dashboard", icon: "📚" },
+    { name: "Categories", href: "/categories", icon: "🗂️" },
     { name: "Add Recipe", href: "/recipes/new", icon: "➕" },
   ];
 

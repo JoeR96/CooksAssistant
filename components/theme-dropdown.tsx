@@ -25,8 +25,8 @@ import {
 import { useTheme } from "./theme-provider";
 
 const themes = [
-  { value: "light", label: "Light", icon: LightMode, description: "Clean & bright" },
   { value: "dark", label: "Dark", icon: DarkMode, description: "Easy on the eyes" },
+  { value: "light", label: "Light", icon: LightMode, description: "Clean & bright" },
   { value: "system", label: "System", icon: Computer, description: "Follow system" },
 ];
 

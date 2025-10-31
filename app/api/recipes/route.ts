@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     const mealType = searchParams.get("mealType");
+    const category = searchParams.get("category");
     const search = searchParams.get("search");
 
     let recipes;
@@ -16,13 +17,15 @@ export async function GET(request: NextRequest) {
       // Authenticated user - show their recipes
       if (search) {
         recipes = await recipeQueries.search(userId, search);
+      } else if (category && category !== "all") {
+        recipes = await recipeQueries.getByCategory(userId, category as any);
       } else if (mealType && mealType !== "all") {
         recipes = await recipeQueries.getByMealType(userId, mealType as any);
       } else {
         recipes = await recipeQueries.getByUserId(userId);
       }
     } else {
-      // Public access - show all recipes
+      // Public access - show all recipes (no category filtering for public)
       if (search) {
         recipes = await recipeQueries.searchPublic(search);
       } else if (mealType && mealType !== "all") {

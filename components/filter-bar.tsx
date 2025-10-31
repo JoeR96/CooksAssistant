@@ -14,8 +14,10 @@ import { Search, Clear } from "@mui/icons-material";
 
 interface FilterBarProps {
   onMealTypeChange: (mealType: string) => void;
+  onCategoryChange: (category: string) => void;
   onSearchChange: (search: string) => void;
   selectedMealType: string;
+  selectedCategory: string;
   searchTerm: string;
 }
 
@@ -28,11 +30,20 @@ const mealTypes = [
   { value: "other", label: "Other", icon: "✨" },
 ];
 
+const categories = [
+  { value: "all", label: "All Categories", icon: "📂" },
+  { value: "christmas", label: "Christmas", icon: "🎄" },
+  { value: "upcoming_meals", label: "Upcoming Meals", icon: "📅" },
+  { value: "custom", label: "Custom", icon: "⭐" },
+];
+
 export function FilterBar({ 
   onMealTypeChange, 
-  onSearchChange, 
-  selectedMealType, 
-  searchTerm 
+  onCategoryChange,
+  onSearchChange,
+  selectedMealType,
+  selectedCategory, 
+  searchTerm
 }: FilterBarProps) {
   const [localSearch, setLocalSearch] = useState(searchTerm);
 
@@ -54,24 +65,55 @@ export function FilterBar({
   return (
     <Stack spacing={3}>
       {/* Meal Type Filter */}
-      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
-        {mealTypes.map((type) => (
-          <Chip
-            key={type.value}
-            label={`${type.icon} ${type.label}`}
-            onClick={() => onMealTypeChange(type.value)}
-            variant={selectedMealType === type.value ? "filled" : "outlined"}
-            color={selectedMealType === type.value ? "primary" : "default"}
-            sx={{
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                transform: 'translateY(-1px)',
-                boxShadow: 2,
-              }
-            }}
-          />
-        ))}
-      </Stack>
+      <Box>
+        <Box sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 600, color: 'text.secondary' }}>
+          Meal Type
+        </Box>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+          {mealTypes.map((type) => (
+            <Chip
+              key={type.value}
+              label={`${type.icon} ${type.label}`}
+              onClick={() => onMealTypeChange(type.value)}
+              variant={selectedMealType === type.value ? "filled" : "outlined"}
+              color={selectedMealType === type.value ? "primary" : "default"}
+              sx={{
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-1px)',
+                  boxShadow: 2,
+                }
+              }}
+            />
+          ))}
+        </Stack>
+      </Box>
+
+      {/* Category Filter */}
+      <Box>
+        <Box sx={{ mb: 1, fontSize: '0.875rem', fontWeight: 600, color: 'text.secondary' }}>
+          Categories
+        </Box>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+          {categories.map((category) => (
+            <Chip
+              key={category.value}
+              label={`${category.icon} ${category.label}`}
+              onClick={() => onCategoryChange(category.value)}
+              variant={selectedCategory === category.value ? "filled" : "outlined"}
+              color={selectedCategory === category.value ? "secondary" : "default"}
+              sx={{
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  transform: 'translateY(-1px)',
+                  boxShadow: 2,
+                }
+              }}
+            />
+          ))}
+
+        </Stack>
+      </Box>
 
       {/* Search Bar */}
       <Box component="form" onSubmit={handleSearchSubmit} sx={{ maxWidth: 400 }}>

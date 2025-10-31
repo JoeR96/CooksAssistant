@@ -2,6 +2,7 @@ import { pgTable, uuid, varchar, text, json, timestamp, boolean, pgEnum } from "
 
 // Enums
 export const mealTypeEnum = pgEnum('meal_type', ['breakfast', 'lunch', 'dinner', 'snack', 'other']);
+export const categoryTypeEnum = pgEnum('category_type', ['christmas', 'upcoming_meals', 'custom']);
 
 // Recipes table
 export const recipes = pgTable('recipes', {
@@ -37,4 +38,34 @@ export const recipeNotes = pgTable('recipe_notes', {
   text: text('text').notNull(),
   imageUrl: varchar('image_url', { length: 500 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Recipe categories table
+export const recipeCategories = pgTable('recipe_categories', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  type: categoryTypeEnum('type').notNull(),
+  userId: varchar('user_id', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Recipe category items table (many-to-many relationship)
+export const recipeCategoryItems = pgTable('recipe_category_items', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  categoryId: uuid('category_id').references(() => recipeCategories.id, { onDelete: 'cascade' }).notNull(),
+  recipeId: uuid('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }).notNull(),
+  userId: varchar('user_id', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Category ingredient checklist table
+export const categoryIngredientChecklist = pgTable('category_ingredient_checklist', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  categoryId: uuid('category_id').references(() => recipeCategories.id, { onDelete: 'cascade' }).notNull(),
+  ingredient: varchar('ingredient', { length: 255 }).notNull(),
+  quantity: varchar('quantity', { length: 100 }),
+  checked: boolean('checked').default(false),
+  userId: varchar('user_id', { length: 255 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
