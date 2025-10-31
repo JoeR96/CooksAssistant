@@ -4,7 +4,7 @@ import { categoryIngredientChecklistQueries } from '@/lib/db/queries';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -12,7 +12,8 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const checklist = await categoryIngredientChecklistQueries.getByCategory(params.id, userId);
+    const { id } = await params;
+    const checklist = await categoryIngredientChecklistQueries.getByCategory(id, userId);
     return NextResponse.json(checklist);
   } catch (error) {
     console.error('Error fetching category checklist:', error);
@@ -22,7 +23,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -30,8 +31,9 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     // Regenerate checklist
-    const checklist = await categoryIngredientChecklistQueries.regenerateForCategory(params.id, userId);
+    const checklist = await categoryIngredientChecklistQueries.regenerateForCategory(id, userId);
     return NextResponse.json(checklist);
   } catch (error) {
     console.error('Error regenerating category checklist:', error);

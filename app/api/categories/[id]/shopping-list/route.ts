@@ -4,7 +4,7 @@ import { categoryIngredientChecklistQueries } from '@/lib/db/queries';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -12,14 +12,15 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('Shopping list API - params.id:', params.id, 'userId:', userId);
+    const { id } = await params;
+    console.log('Shopping list API - id:', id, 'userId:', userId);
     
-    if (!params.id) {
+    if (!id) {
       return NextResponse.json({ error: 'Category ID is required' }, { status: 400 });
     }
 
     // Get all unchecked ingredients from the category checklist
-    const checklist = await categoryIngredientChecklistQueries.getByCategory(params.id, userId);
+    const checklist = await categoryIngredientChecklistQueries.getByCategory(id, userId);
     const shoppingList = checklist.filter(item => !item.checked);
 
     return NextResponse.json({

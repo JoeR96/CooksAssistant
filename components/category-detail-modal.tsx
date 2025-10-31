@@ -241,7 +241,7 @@ export function CategoryDetailModal({ category, open, onClose, onUpdate }: Categ
                     className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50"
                   >
                     <Checkbox
-                      checked={item.checked}
+                      checked={item.checked || false}
                       onCheckedChange={(checked) => 
                         toggleIngredientCheck(item.id, checked as boolean)
                       }

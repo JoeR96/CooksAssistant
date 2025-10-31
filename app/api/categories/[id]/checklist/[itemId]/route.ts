@@ -4,7 +4,7 @@ import { categoryIngredientChecklistQueries } from '@/lib/db/queries';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string; itemId: string } }
+  { params }: { params: Promise<{ id: string; itemId: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -12,6 +12,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id, itemId } = await params;
     const { checked } = await request.json();
 
     if (typeof checked !== 'boolean') {
@@ -19,7 +20,7 @@ export async function PATCH(
     }
 
     const updatedItem = await categoryIngredientChecklistQueries.updateCheckedStatus(
-      params.itemId,
+      itemId,
       userId,
       checked
     );
