@@ -33,8 +33,6 @@ const mealTypes = [
 const categories = [
   { value: "all", label: "All Categories", icon: "📂" },
   { value: "christmas", label: "Christmas", icon: "🎄" },
-  { value: "upcoming_meals", label: "Upcoming Meals", icon: "📅" },
-  { value: "custom", label: "Custom", icon: "⭐" },
 ];
 
 export function FilterBar({ 

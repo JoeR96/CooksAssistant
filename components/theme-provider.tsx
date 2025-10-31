@@ -2,7 +2,26 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark" | "neon" | "retro" | "cyberpunk" | "synthwave" | "system";
+type Theme = 
+  | "light" 
+  | "dark" 
+  | "system"
+  | "ocean"
+  | "forest" 
+  | "sunset"
+  | "lavender"
+  | "rose"
+  | "mint"
+  | "amber"
+  | "slate"
+  | "crimson"
+  | "emerald"
+  | "sapphire"
+  | "coral"
+  | "violet"
+  | "gold"
+  | "charcoal"
+  | "cherry";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -43,7 +62,12 @@ export function ThemeProvider({
     const root = window.document.documentElement;
 
     // Remove all theme classes
-    root.classList.remove("light", "dark", "neon", "retro", "cyberpunk", "synthwave");
+    const allThemes = [
+      "light", "dark", "ocean", "forest", "sunset", "lavender", "rose", 
+      "mint", "amber", "slate", "crimson", "emerald", "sapphire", 
+      "coral", "violet", "gold", "charcoal", "cherry"
+    ];
+    root.classList.remove(...allThemes);
 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")

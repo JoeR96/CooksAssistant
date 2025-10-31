@@ -20,14 +20,45 @@ import {
   Computer,
   Palette,
   Check,
-  KeyboardArrowDown
+  KeyboardArrowDown,
+  Water,
+  Forest,
+  WbSunny,
+  LocalFlorist,
+  Favorite,
+  Nature,
+  Star,
+  Layers,
+  Whatshot,
+  Diamond,
+  Circle,
+  AutoAwesome,
+  FiberManualRecord,
+  Brightness1,
+  RadioButtonUnchecked
 } from "@mui/icons-material";
 import { useTheme } from "./theme-provider";
 
 const themes = [
-  { value: "dark", label: "Dark", icon: DarkMode, description: "Easy on the eyes" },
-  { value: "light", label: "Light", icon: LightMode, description: "Clean & bright" },
-  { value: "system", label: "System", icon: Computer, description: "Follow system" },
+  { value: "system", label: "System", icon: Computer, description: "Follow system", color: "#6b7280" },
+  { value: "light", label: "Light", icon: LightMode, description: "Clean & bright", color: "#f8fafc" },
+  { value: "dark", label: "Dark", icon: DarkMode, description: "Easy on the eyes", color: "#1e293b" },
+  { value: "ocean", label: "Ocean", icon: Water, description: "Deep blue waters", color: "#0ea5e9" },
+  { value: "forest", label: "Forest", icon: Forest, description: "Natural greens", color: "#059669" },
+  { value: "sunset", label: "Sunset", icon: WbSunny, description: "Warm oranges", color: "#ea580c" },
+  { value: "lavender", label: "Lavender", icon: LocalFlorist, description: "Soft purples", color: "#8b5cf6" },
+  { value: "rose", label: "Rose", icon: Favorite, description: "Gentle pinks", color: "#ec4899" },
+  { value: "mint", label: "Mint", icon: Nature, description: "Fresh mint", color: "#10b981" },
+  { value: "amber", label: "Amber", icon: Star, description: "Golden warmth", color: "#f59e0b" },
+  { value: "slate", label: "Slate", icon: Layers, description: "Cool grays", color: "#64748b" },
+  { value: "crimson", label: "Crimson", icon: Whatshot, description: "Bold reds", color: "#dc2626" },
+  { value: "emerald", label: "Emerald", icon: Diamond, description: "Rich greens", color: "#047857" },
+  { value: "sapphire", label: "Sapphire", icon: Circle, description: "Royal blues", color: "#1d4ed8" },
+  { value: "coral", label: "Coral", icon: AutoAwesome, description: "Vibrant coral", color: "#f97316" },
+  { value: "violet", label: "Violet", icon: FiberManualRecord, description: "Deep violets", color: "#7c3aed" },
+  { value: "gold", label: "Gold", icon: Brightness1, description: "Luxurious gold", color: "#ca8a04" },
+  { value: "charcoal", label: "Charcoal", icon: RadioButtonUnchecked, description: "Dark charcoal", color: "#374151" },
+  { value: "cherry", label: "Cherry", icon: Favorite, description: "Sweet cherry", color: "#be185d" },
 ];
 
 export function ThemeDropdown() {
@@ -136,7 +167,7 @@ export function ThemeDropdown() {
                 <IconComponent 
                   sx={{ 
                     fontSize: 20,
-                    color: isSelected ? 'primary.main' : 'text.secondary'
+                    color: isSelected ? themeOption.color : 'text.secondary'
                   }} 
                 />
               </ListItemIcon>

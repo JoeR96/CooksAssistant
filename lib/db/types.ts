@@ -29,7 +29,7 @@ export type NewCategoryIngredientChecklist = InferInsertModel<typeof categoryIng
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'other';
 
 // Category type enum
-export type CategoryType = 'christmas' | 'upcoming_meals' | 'custom';
+export type CategoryType = 'christmas';
 
 // Additional utility types
 export interface RecipeWithNotes extends Recipe {
