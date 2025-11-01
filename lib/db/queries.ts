@@ -713,5 +713,25 @@ export const brisketSessionQueries = {
       console.error('Error fetching latest completed session:', error);
       throw new Error('Failed to fetch latest completed session');
     }
+  },
+
+  // Get all active sessions (public)
+  async getAllActive() {
+    try {
+      const sessions = await db.select().from(brisketSessions)
+        .where(or(
+          eq(brisketSessions.status, 'smoking'),
+          eq(brisketSessions.status, 'wrapped'),
+          eq(brisketSessions.status, 'finishing'),
+          eq(brisketSessions.status, 'resting')
+        ))
+        .orderBy(desc(brisketSessions.startedAt))
+        .limit(20);
+      
+      return sessions;
+    } catch (error) {
+      console.error('Error fetching all active sessions:', error);
+      throw new Error('Failed to fetch all active sessions');
+    }
   }
 };

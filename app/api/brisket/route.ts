@@ -5,12 +5,20 @@ import { brisketSessionQueries } from '@/lib/db/queries';
 export async function GET(request: NextRequest) {
   try {
     const { userId } = await auth();
+    const { searchParams } = new URL(request.url);
+    const active = searchParams.get('active');
+    const all = searchParams.get('all');
+
+    // Public endpoint - get all active sessions
+    if (all === 'true') {
+      const sessions = await brisketSessionQueries.getAllActive();
+      return NextResponse.json(sessions);
+    }
+
+    // User must be authenticated for personal queries
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    const { searchParams } = new URL(request.url);
-    const active = searchParams.get('active');
 
     if (active === 'true') {
       const session = await brisketSessionQueries.getActiveSession(userId);

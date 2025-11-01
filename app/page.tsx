@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { Header } from "@/components/header";
 import { RecipeDashboard } from "@/components/recipe-dashboard";
 import { BrisketFab } from "@/components/brisket-fab";
+import { BrisketSmokingSection } from "@/components/brisket-smoking-section";
 import { HomeHeaderSubtitle } from "@/components/home-header";
 import { getUserId } from "@/lib/auth/utils";
 import { recipeQueries } from "@/lib/db/queries";
@@ -37,6 +38,7 @@ export default async function Home() {
       />
       
       <Box sx={{ maxWidth: '1400px', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 }, py: 4 }}>
+        <BrisketSmokingSection />
         <RecipeDashboard initialRecipes={recipes} />
       </Box>
 
