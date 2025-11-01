@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, Box, Typography, LinearProgress, Chip, IconButton, Tooltip } from '@mui/material';
+import { Card, CardContent, Box, Typography, LinearProgress, Chip, IconButton, Tooltip, Button } from '@mui/material';
 import { LocalFireDepartment, Checkroom, Restaurant, HotelOutlined, CheckCircle, Edit } from '@mui/icons-material';
 import { BrisketSession } from '@/lib/db/types';
 import { BrisketReviewModal } from '@/components/brisket-review-modal';
@@ -77,21 +77,29 @@ export function BrisketTracker({ session, onUpdate }: BrisketTrackerProps) {
       case 'smoking':
         return {
           label: 'Mark as Wrapped',
+          color: 'error' as const,
+          size: 'small' as const,
           action: () => handleStatusUpdate('wrapped', { actualWrapTemp: session.targetWrapTemp }),
         };
       case 'wrapped':
         return {
           label: 'Mark as Finishing',
+          color: 'primary' as const,
+          size: 'medium' as const,
           action: () => handleStatusUpdate('finishing'),
         };
       case 'finishing':
         return {
           label: 'Start Resting',
+          color: 'primary' as const,
+          size: 'medium' as const,
           action: () => handleStatusUpdate('resting', { actualFinishTemp: session.targetFinishTemp }),
         };
       case 'resting':
         return {
           label: 'Complete & Review',
+          color: 'primary' as const,
+          size: 'medium' as const,
           action: () => {
             handleStatusUpdate('completed', { 
               actualDuration: elapsedMinutes,
@@ -134,11 +142,33 @@ export function BrisketTracker({ session, onUpdate }: BrisketTrackerProps) {
                 Target: {formatTime(session.targetDuration)}
               </Typography>
             </Box>
-            <LinearProgress 
-              variant="determinate" 
-              value={getProgress()} 
-              sx={{ height: 8, borderRadius: 1 }}
-            />
+            <Box className="smoke-container" sx={{ position: 'relative', height: 12 }}>
+              <LinearProgress 
+                variant="determinate" 
+                value={getProgress()} 
+                sx={{ 
+                  height: 12, 
+                  borderRadius: 2,
+                  bgcolor: 'rgba(0,0,0,0.1)',
+                  '& .MuiLinearProgress-bar': {
+                    borderRadius: 2,
+                    background: 'linear-gradient(90deg, #ff4500 0%, #ff6347 25%, #ff8c00 50%, #ff6347 75%, #ff4500 100%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'fire-gradient 2s ease infinite, fire-flicker 1.5s ease-in-out infinite',
+                    boxShadow: '0 0 10px rgba(255, 69, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.6), 0 0 30px rgba(255, 69, 0, 0.4)',
+                  }
+                }}
+              />
+              {session.status !== 'completed' && (
+                <>
+                  <div className="smoke smoke-1" />
+                  <div className="smoke smoke-2" />
+                  <div className="smoke smoke-3" />
+                  <div className="smoke smoke-4" />
+                  <div className="smoke smoke-5" />
+                </>
+              )}
+            </Box>
           </Box>
 
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 2 }}>
@@ -167,33 +197,58 @@ export function BrisketTracker({ session, onUpdate }: BrisketTrackerProps) {
           </Box>
 
           {nextAction && session.status !== 'completed' && (
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <button
+            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+              <Button
+                variant="contained"
+                color={nextAction.color}
+                size={nextAction.size}
                 onClick={nextAction.action}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  px: nextAction.size === 'small' ? 3 : 4,
+                  py: nextAction.size === 'small' ? 0.75 : 1.5,
+                }}
               >
                 {nextAction.label}
-              </button>
+              </Button>
             </Box>
           )}
 
           {session.status === 'completed' && (
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
               {!session.review && (
-                <button
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="success"
                   onClick={() => setShowReview(true)}
-                  className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
+                  sx={{
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    py: 1.5,
+                  }}
                 >
                   Add Review
-                </button>
+                </Button>
               )}
               {session.review && !session.adjustments && (
-                <button
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="warning"
                   onClick={() => setShowAdjustments(true)}
-                  className="flex-1 bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors"
+                  sx={{
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    py: 1.5,
+                  }}
                 >
                   Adjust for Next Time
-                </button>
+                </Button>
               )}
               {session.adjustments && (
                 <Box sx={{ width: '100%', p: 2, bgcolor: 'success.light', borderRadius: 1 }}>

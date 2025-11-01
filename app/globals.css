@@ -422,3 +422,130 @@
     opacity: 0.5;
   }
 }
+
+/* Fiery progress bar animations */
+@keyframes fire-flicker {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8),
+                0 0 20px rgba(255, 140, 0, 0.6),
+                0 0 30px rgba(255, 69, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 69, 0, 1),
+                0 0 30px rgba(255, 140, 0, 0.8),
+                0 0 45px rgba(255, 69, 0, 0.6);
+  }
+}
+
+@keyframes fire-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes smoke-rise {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.5);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-20px) translateX(10px) scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-40px) translateX(-5px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes smoke-rise-2 {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.5);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-25px) translateX(-10px) scale(0.9);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-50px) translateX(5px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes smoke-rise-3 {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.4);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-30px) translateX(5px) scale(0.7);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-60px) translateX(-10px) scale(1);
+    opacity: 0;
+  }
+}
+
+.fire-progress {
+  background: linear-gradient(90deg, 
+    #ff4500 0%, 
+    #ff6347 25%, 
+    #ff8c00 50%, 
+    #ff6347 75%, 
+    #ff4500 100%
+  );
+  background-size: 200% 100%;
+  animation: fire-gradient 2s ease infinite, fire-flicker 1.5s ease-in-out infinite;
+}
+
+.smoke-container {
+  position: relative;
+  overflow: visible;
+}
+
+.smoke {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(200, 200, 200, 0.6) 0%, rgba(150, 150, 150, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.smoke-1 {
+  animation: smoke-rise 3s ease-out infinite;
+  left: 20%;
+  top: -5px;
+}
+
+.smoke-2 {
+  animation: smoke-rise-2 3.5s ease-out infinite 0.5s;
+  left: 50%;
+  top: -5px;
+}
+
+.smoke-3 {
+  animation: smoke-rise-3 4s ease-out infinite 1s;
+  left: 80%;
+  top: -5px;
+}
+
+.smoke-4 {
+  animation: smoke-rise 3.2s ease-out infinite 1.5s;
+  left: 35%;
+  top: -5px;
+}
+
+.smoke-5 {
+  animation: smoke-rise-2 3.8s ease-out infinite 2s;
+  left: 65%;
+  top: -5px;
+}

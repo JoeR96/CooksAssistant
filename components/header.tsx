@@ -7,10 +7,11 @@ import {
   Box, 
   Container,
   Avatar,
+  IconButton,
   useTheme,
   alpha
 } from "@mui/material";
-import { Restaurant } from "@mui/icons-material";
+import { Restaurant, ArrowBack } from "@mui/icons-material";
 import { UserProfile } from "./user-profile";
 import { AddRecipeButton } from "./add-recipe-button";
 import { ThemeDropdown } from "./theme-dropdown";
@@ -19,9 +20,12 @@ interface HeaderProps {
   title: string;
   subtitle?: string | React.ReactNode;
   showAddButton?: boolean;
+  icon?: React.ReactNode;
+  backButton?: boolean;
+  onBack?: () => void;
 }
 
-export function Header({ title, subtitle, showAddButton = false }: HeaderProps) {
+export function Header({ title, subtitle, showAddButton = false, icon, backButton = false, onBack }: HeaderProps) {
   const theme = useTheme();
 
   return (
@@ -44,15 +48,29 @@ export function Header({ title, subtitle, showAddButton = false }: HeaderProps) 
         >
           {/* Left side - Logo and Title */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {backButton && onBack && (
+              <IconButton 
+                onClick={onBack}
+                sx={{ 
+                  bgcolor: alpha(theme.palette.background.paper, 0.8),
+                  '&:hover': { bgcolor: alpha(theme.palette.action.hover, 0.8) },
+                  boxShadow: theme.shadows[2],
+                }}
+              >
+                <ArrowBack />
+              </IconButton>
+            )}
             <Avatar
               sx={{
                 width: { xs: 40, sm: 48 },
                 height: { xs: 40, sm: 48 },
-                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                background: icon 
+                  ? `linear-gradient(135deg, ${theme.palette.error.main}, ${theme.palette.error.dark})`
+                  : `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                 boxShadow: theme.shadows[4],
               }}
             >
-              <Restaurant sx={{ fontSize: { xs: 20, sm: 24 } }} />
+              {icon || <Restaurant sx={{ fontSize: { xs: 20, sm: 24 } }} />}
             </Avatar>
             
             <Box>

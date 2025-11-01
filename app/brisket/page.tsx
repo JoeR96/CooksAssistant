@@ -76,27 +76,15 @@ export default function BrisketPage() {
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Header
         title="Brisket Tracker"
-        subtitle={activeSession ? 'Session in progress' : `${pastSessions.length} session${pastSessions.length !== 1 ? 's' : ''} completed`}
+        subtitle={activeSession ? 'Active Smoke' : `${pastSessions.length} session${pastSessions.length !== 1 ? 's' : ''} completed`}
         showAddButton={false}
+        icon={<LocalFireDepartment />}
+        backButton={true}
+        onBack={() => router.push('/')}
       />
       
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton 
-              onClick={() => router.push('/')}
-              sx={{ 
-                bgcolor: 'background.paper',
-                '&:hover': { bgcolor: 'action.hover' }
-              }}
-            >
-              <ArrowBack />
-            </IconButton>
-            <LocalFireDepartment sx={{ fontSize: 40, color: 'error.main' }} />
-            <Typography variant="h4" component="h1">
-              Brisket Tracker
-            </Typography>
-          </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 4 }}>
           {!activeSession && (
             <MuiButton
               variant="contained"
@@ -104,6 +92,12 @@ export default function BrisketPage() {
               startIcon={<Add />}
               onClick={() => setShowStartModal(true)}
               size="large"
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 600,
+                px: 3,
+              }}
             >
               Start New Session
             </MuiButton>
@@ -114,7 +108,7 @@ export default function BrisketPage() {
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
             <LocalFireDepartment color="error" />
-            Active Session
+            Active Smoke
           </Typography>
           <BrisketTracker session={activeSession} onUpdate={loadSessions} />
         </Box>
@@ -132,8 +126,15 @@ export default function BrisketPage() {
             </Typography>
             <MuiButton
               variant="contained"
+              color="error"
               startIcon={<Add />}
               onClick={() => setShowStartModal(true)}
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 600,
+                px: 3,
+              }}
             >
               Start Your First Brisket
             </MuiButton>
