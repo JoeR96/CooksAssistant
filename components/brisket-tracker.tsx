@@ -6,13 +6,15 @@ import { LocalFireDepartment, Checkroom, Restaurant, HotelOutlined, CheckCircle,
 import { BrisketSession } from '@/lib/db/types';
 import { BrisketReviewModal } from '@/components/brisket-review-modal';
 import { BrisketAdjustmentsModal } from '@/components/brisket-adjustments-modal';
+import { BrisketProgressPhotos } from '@/components/brisket-progress-photos';
 
 interface BrisketTrackerProps {
   session: BrisketSession;
   onUpdate: () => void;
+  isOwner?: boolean;
 }
 
-export function BrisketTracker({ session, onUpdate }: BrisketTrackerProps) {
+export function BrisketTracker({ session, onUpdate, isOwner = true }: BrisketTrackerProps) {
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
   const [showReview, setShowReview] = useState(false);
   const [showAdjustments, setShowAdjustments] = useState(false);
@@ -281,6 +283,8 @@ export function BrisketTracker({ session, onUpdate }: BrisketTrackerProps) {
           onUpdate();
         }}
       />
+
+      <BrisketProgressPhotos sessionId={session.id} isOwner={isOwner} />
     </>
   );
 }

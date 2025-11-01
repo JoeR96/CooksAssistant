@@ -1,5 +1,5 @@
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions } from './schema';
+import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions, brisketProgressPhotos } from './schema';
 
 // Recipe types
 export type Recipe = InferSelectModel<typeof recipes>;
@@ -71,3 +71,7 @@ export interface BrisketAdjustments {
   restTime?: number;
   notes?: string;
 }
+
+// Brisket progress photo types
+export type BrisketProgressPhoto = InferSelectModel<typeof brisketProgressPhotos>;
+export type NewBrisketProgressPhoto = InferInsertModel<typeof brisketProgressPhotos>;

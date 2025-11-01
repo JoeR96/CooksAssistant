@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { Close, LocalFireDepartment, Checkroom, Restaurant, HotelOutlined } from '@mui/icons-material';
 import { BrisketSession } from '@/lib/db/types';
+import { BrisketProgressPhotos } from './brisket-progress-photos';
 
 interface BrisketDetailModalProps {
   open: boolean;
@@ -225,6 +226,13 @@ export function BrisketDetailModal({ open, session, onClose }: BrisketDetailModa
             <Typography variant="body2" color="info.dark">
               👀 You're viewing a live session from the community. Sign in to track your own brisket!
             </Typography>
+          </Box>
+
+          <Divider />
+
+          {/* Progress Photos */}
+          <Box sx={{ mt: -2 }}>
+            <BrisketProgressPhotos sessionId={session.id} isOwner={false} />
           </Box>
         </Box>
       </DialogContent>

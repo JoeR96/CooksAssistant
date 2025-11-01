@@ -1,7 +1,7 @@
-import { eq, and, or, desc, ilike, inArray } from 'drizzle-orm';
+import { eq, and, or, desc, ilike, inArray, asc } from 'drizzle-orm';
 import { db } from './index';
-import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions } from './schema';
-import { Recipe, NewRecipe, ShoppingListItem, NewShoppingListItem, RecipeNote, NewRecipeNote, MealType, RecipeCategory, NewRecipeCategory, RecipeCategoryItem, NewRecipeCategoryItem, CategoryIngredientChecklist, NewCategoryIngredientChecklist, CategoryWithRecipes, CategoryType, BrisketSession, NewBrisketSession, BrisketStatus, BrisketAdjustments } from './types';
+import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions, brisketProgressPhotos } from './schema';
+import { Recipe, NewRecipe, ShoppingListItem, NewShoppingListItem, RecipeNote, NewRecipeNote, MealType, RecipeCategory, NewRecipeCategory, RecipeCategoryItem, NewRecipeCategoryItem, CategoryIngredientChecklist, NewCategoryIngredientChecklist, CategoryWithRecipes, CategoryType, BrisketSession, NewBrisketSession, BrisketStatus, BrisketAdjustments, BrisketProgressPhoto, NewBrisketProgressPhoto } from './types';
 
 // Recipe queries
 export const recipeQueries = {
@@ -732,6 +732,79 @@ export const brisketSessionQueries = {
     } catch (error) {
       console.error('Error fetching all active sessions:', error);
       throw new Error('Failed to fetch all active sessions');
+    }
+  }
+};
+
+// Brisket progress photo queries
+export const brisketProgressPhotoQueries = {
+  // Get all photos for a session
+  async getBySessionId(sessionId: string) {
+    try {
+      return await db.select().from(brisketProgressPhotos)
+        .where(eq(brisketProgressPhotos.sessionId, sessionId))
+        .orderBy(asc(brisketProgressPhotos.orderIndex), asc(brisketProgressPhotos.createdAt));
+    } catch (error) {
+      console.error('Error fetching progress photos:', error);
+      throw new Error('Failed to fetch progress photos');
+    }
+  },
+
+  // Add a photo
+  async create(data: NewBrisketProgressPhoto) {
+    try {
+      const [photo] = await db.insert(brisketProgressPhotos).values(data).returning();
+      return photo;
+    } catch (error) {
+      console.error('Error creating progress photo:', error);
+      throw new Error('Failed to create progress photo');
+    }
+  },
+
+  // Delete a photo
+  async delete(id: string, sessionId: string) {
+    try {
+      await db.delete(brisketProgressPhotos)
+        .where(and(
+          eq(brisketProgressPhotos.id, id),
+          eq(brisketProgressPhotos.sessionId, sessionId)
+        ));
+      return true;
+    } catch (error) {
+      console.error('Error deleting progress photo:', error);
+      throw new Error('Failed to delete progress photo');
+    }
+  },
+
+  // Update photo caption
+  async updateCaption(id: string, sessionId: string, caption: string) {
+    try {
+      const [photo] = await db.update(brisketProgressPhotos)
+        .set({ caption })
+        .where(and(
+          eq(brisketProgressPhotos.id, id),
+          eq(brisketProgressPhotos.sessionId, sessionId)
+        ))
+        .returning();
+      return photo;
+    } catch (error) {
+      console.error('Error updating photo caption:', error);
+      throw new Error('Failed to update photo caption');
+    }
+  },
+
+  // Get next order index
+  async getNextOrderIndex(sessionId: string) {
+    try {
+      const photos = await db.select().from(brisketProgressPhotos)
+        .where(eq(brisketProgressPhotos.sessionId, sessionId))
+        .orderBy(desc(brisketProgressPhotos.orderIndex))
+        .limit(1);
+      
+      return photos.length > 0 ? photos[0].orderIndex + 1 : 0;
+    } catch (error) {
+      console.error('Error getting next order index:', error);
+      return 0;
     }
   }
 };

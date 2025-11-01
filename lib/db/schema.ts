@@ -117,3 +117,13 @@ export const brisketSessions = pgTable('brisket_sessions', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+// Brisket progress photos table
+export const brisketProgressPhotos = pgTable('brisket_progress_photos', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sessionId: uuid('session_id').references(() => brisketSessions.id, { onDelete: 'cascade' }).notNull(),
+  imageUrl: varchar('image_url', { length: 500 }).notNull(),
+  caption: text('caption'),
+  orderIndex: integer('order_index').notNull().default(0),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
