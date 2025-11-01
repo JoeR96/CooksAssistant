@@ -17,7 +17,7 @@ import {
 import { AccessTime, People, Edit } from "@mui/icons-material";
 import { RecipeFormModal } from "./recipe-form-modal";
 import { useUserSession } from "@/lib/auth/hooks";
-import { ChristmasToggleButton } from "./christmas-toggle-button";
+import { CategoryToggleButtons } from "./category-toggle-buttons";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -152,9 +152,9 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             </Tooltip>
           )}
 
-          {/* Christmas Toggle Button - Show for authenticated users */}
+          {/* Category Toggle Buttons - Show for authenticated users */}
           {userId && (
-            <ChristmasToggleButton recipeId={recipe.id} />
+            <CategoryToggleButtons recipeId={recipe.id} />
           )}
         </Box>
 

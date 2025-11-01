@@ -50,6 +50,7 @@ export function CreateCategoryModal({ open, onClose, onSuccess }: CreateCategory
 
   const categoryOptions = [
     { value: 'christmas', label: 'Christmas', icon: Gift, description: 'Holiday recipes and festive meals' },
+    { value: 'planned_meals', label: 'Planned Meals', icon: Calendar, description: 'Meals you want to cook soon' },
   ];
 
   return (

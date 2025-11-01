@@ -2,7 +2,7 @@ import { pgTable, uuid, varchar, text, json, timestamp, boolean, pgEnum } from "
 
 // Enums
 export const mealTypeEnum = pgEnum('meal_type', ['breakfast', 'lunch', 'dinner', 'snack', 'other']);
-export const categoryTypeEnum = pgEnum('category_type', ['christmas']);
+export const categoryTypeEnum = pgEnum('category_type', ['christmas', 'planned_meals']);
 
 // Recipes table
 export const recipes = pgTable('recipes', {

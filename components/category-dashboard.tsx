@@ -49,6 +49,8 @@ export function CategoryDashboard({ userId }: CategoryDashboardProps) {
     switch (type) {
       case 'christmas':
         return <Gift className="h-5 w-5" />;
+      case 'planned_meals':
+        return <Calendar className="h-5 w-5" />;
       default:
         return <ChefHat className="h-5 w-5" />;
     }
@@ -58,6 +60,8 @@ export function CategoryDashboard({ userId }: CategoryDashboardProps) {
     switch (type) {
       case 'christmas':
         return 'bg-red-100 text-red-800 border-red-200';
+      case 'planned_meals':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
