@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { RecipeCategory, CategoryType } from '@/lib/db/types';
-import { Plus, Gift, Calendar, ChefHat } from 'lucide-react';
+import { Plus, Gift, ChefHat } from 'lucide-react';
 import { CreateCategoryModal } from './create-category-modal';
 
 interface AddRecipeToCategorySimpleProps {
