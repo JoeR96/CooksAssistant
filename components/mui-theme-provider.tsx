@@ -2,9 +2,10 @@
 
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { darkTheme, lightTheme } from '@/lib/theme/mui-theme';
+import { createTheme } from '@mui/material/styles';
 import { useTheme } from './theme-provider';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { themeColors, ThemeName } from '@/lib/theme/theme-colors';
 
 interface MuiThemeProviderProps {
   children: React.ReactNode;
@@ -12,37 +13,71 @@ interface MuiThemeProviderProps {
 
 export function MuiThemeProvider({ children }: MuiThemeProviderProps) {
   const { theme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState(darkTheme);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
-
-    // Determine which MUI theme to use based on the current theme
-    let shouldUseLightTheme = false;
+  const currentTheme = useMemo(() => {
+    let themeName: ThemeName = 'dark';
     
-    if (theme === 'light') {
-      shouldUseLightTheme = true;
-    } else if (theme === 'system') {
-      shouldUseLightTheme = window.matchMedia('(prefers-color-scheme: light)').matches;
+    if (theme === 'system') {
+      themeName = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else if (theme in themeColors) {
+      themeName = theme as ThemeName;
     }
-    // For all other themes (dark, neon, retro, etc.), use dark theme
-    
-    setCurrentTheme(shouldUseLightTheme ? lightTheme : darkTheme);
+
+    const colors = themeColors[themeName];
+
+    return createTheme({
+      palette: {
+        mode: colors.mode,
+        primary: {
+          main: colors.primary,
+        },
+        secondary: {
+          main: colors.secondary,
+        },
+        background: {
+          default: colors.background,
+          paper: colors.paper,
+        },
+        text: {
+          primary: colors.text,
+          secondary: colors.textSecondary,
+        },
+      },
+      typography: {
+        fontFamily: '"Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      },
+      shape: {
+        borderRadius: 12,
+      },
+      components: {
+        MuiCard: {
+          styleOverrides: {
+            root: {
+              backgroundImage: 'none',
+            },
+          },
+        },
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              textTransform: 'none',
+              fontWeight: 500,
+              borderRadius: 8,
+            },
+          },
+        },
+      },
+    });
   }, [theme, mounted]);
 
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
-    return (
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    );
+    return null;
   }
 
   return (

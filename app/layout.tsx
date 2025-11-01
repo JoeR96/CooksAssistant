@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ToastProvider } from "@/components/toast";
+import { ThemeProvider } from "@/components/theme-provider";
 import { MuiThemeProvider } from "@/components/mui-theme-provider";
 import { MobileNav } from "@/components/mobile-nav";
 
@@ -25,14 +26,16 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body>
-          <MuiThemeProvider>
-            <ErrorBoundary>
-              <ToastProvider>
-                {children}
-                <MobileNav />
-              </ToastProvider>
-            </ErrorBoundary>
-          </MuiThemeProvider>
+          <ThemeProvider defaultTheme="dark">
+            <MuiThemeProvider>
+              <ErrorBoundary>
+                <ToastProvider>
+                  {children}
+                  <MobileNav />
+                </ToastProvider>
+              </ErrorBoundary>
+            </MuiThemeProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
