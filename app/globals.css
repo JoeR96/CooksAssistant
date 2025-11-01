@@ -412,3 +412,13 @@
     @apply bg-background text-foreground;
   }
 }
+/
+* Brisket tracker animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

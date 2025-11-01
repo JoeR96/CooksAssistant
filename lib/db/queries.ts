@@ -1,7 +1,7 @@
 import { eq, and, or, desc, ilike, inArray } from 'drizzle-orm';
 import { db } from './index';
-import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist } from './schema';
-import { Recipe, NewRecipe, ShoppingListItem, NewShoppingListItem, RecipeNote, NewRecipeNote, MealType, RecipeCategory, NewRecipeCategory, RecipeCategoryItem, NewRecipeCategoryItem, CategoryIngredientChecklist, NewCategoryIngredientChecklist, CategoryWithRecipes, CategoryType } from './types';
+import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions } from './schema';
+import { Recipe, NewRecipe, ShoppingListItem, NewShoppingListItem, RecipeNote, NewRecipeNote, MealType, RecipeCategory, NewRecipeCategory, RecipeCategoryItem, NewRecipeCategoryItem, CategoryIngredientChecklist, NewCategoryIngredientChecklist, CategoryWithRecipes, CategoryType, BrisketSession, NewBrisketSession, BrisketStatus, BrisketAdjustments } from './types';
 
 // Recipe queries
 export const recipeQueries = {
@@ -576,6 +576,142 @@ export const categoryIngredientChecklistQueries = {
     } catch (error) {
       console.error('Error regenerating category checklist:', error);
       throw new Error('Failed to regenerate category checklist');
+    }
+  }
+};
+
+// Brisket session queries
+export const brisketSessionQueries = {
+  // Get all sessions for a user
+  async getByUserId(userId: string) {
+    try {
+      return await db.select().from(brisketSessions)
+        .where(eq(brisketSessions.userId, userId))
+        .orderBy(desc(brisketSessions.startedAt));
+    } catch (error) {
+      console.error('Error fetching brisket sessions:', error);
+      throw new Error('Failed to fetch brisket sessions');
+    }
+  },
+
+  // Get active session for a user
+  async getActiveSession(userId: string) {
+    try {
+      const sessions = await db.select().from(brisketSessions)
+        .where(and(
+          eq(brisketSessions.userId, userId),
+          or(
+            eq(brisketSessions.status, 'smoking'),
+            eq(brisketSessions.status, 'wrapped'),
+            eq(brisketSessions.status, 'finishing'),
+            eq(brisketSessions.status, 'resting')
+          )
+        ))
+        .orderBy(desc(brisketSessions.startedAt))
+        .limit(1);
+      
+      return sessions[0] || null;
+    } catch (error) {
+      console.error('Error fetching active session:', error);
+      throw new Error('Failed to fetch active session');
+    }
+  },
+
+  // Get session by ID
+  async getById(id: string, userId: string) {
+    try {
+      const sessions = await db.select().from(brisketSessions)
+        .where(and(eq(brisketSessions.id, id), eq(brisketSessions.userId, userId)))
+        .limit(1);
+      
+      return sessions[0] || null;
+    } catch (error) {
+      console.error('Error fetching brisket session:', error);
+      throw new Error('Failed to fetch brisket session');
+    }
+  },
+
+  // Create new session
+  async create(data: NewBrisketSession) {
+    try {
+      const [session] = await db.insert(brisketSessions).values(data).returning();
+      return session;
+    } catch (error) {
+      console.error('Error creating brisket session:', error);
+      throw new Error('Failed to create brisket session');
+    }
+  },
+
+  // Update session status
+  async updateStatus(id: string, userId: string, status: BrisketStatus, additionalData?: Partial<BrisketSession>) {
+    try {
+      const updateData: any = { status, updatedAt: new Date() };
+      
+      if (status === 'wrapped') updateData.wrappedAt = new Date();
+      if (status === 'finishing') updateData.finishedAt = new Date();
+      if (status === 'completed') updateData.completedAt = new Date();
+      
+      if (additionalData) {
+        Object.assign(updateData, additionalData);
+      }
+
+      const [session] = await db.update(brisketSessions)
+        .set(updateData)
+        .where(and(eq(brisketSessions.id, id), eq(brisketSessions.userId, userId)))
+        .returning();
+      
+      return session;
+    } catch (error) {
+      console.error('Error updating brisket session status:', error);
+      throw new Error('Failed to update brisket session status');
+    }
+  },
+
+  // Add review
+  async addReview(id: string, userId: string, rating: number, review: string, imageUrl?: string) {
+    try {
+      const [session] = await db.update(brisketSessions)
+        .set({ rating, review, imageUrl, updatedAt: new Date() })
+        .where(and(eq(brisketSessions.id, id), eq(brisketSessions.userId, userId)))
+        .returning();
+      
+      return session;
+    } catch (error) {
+      console.error('Error adding review:', error);
+      throw new Error('Failed to add review');
+    }
+  },
+
+  // Save adjustments
+  async saveAdjustments(id: string, userId: string, adjustments: BrisketAdjustments) {
+    try {
+      const [session] = await db.update(brisketSessions)
+        .set({ adjustments, updatedAt: new Date() })
+        .where(and(eq(brisketSessions.id, id), eq(brisketSessions.userId, userId)))
+        .returning();
+      
+      return session;
+    } catch (error) {
+      console.error('Error saving adjustments:', error);
+      throw new Error('Failed to save adjustments');
+    }
+  },
+
+  // Get latest completed session (for default values)
+  async getLatestCompleted(userId: string) {
+    try {
+      const sessions = await db.select().from(brisketSessions)
+        .where(and(
+          eq(brisketSessions.userId, userId),
+          eq(brisketSessions.status, 'completed')
+        ))
+        .orderBy(desc(brisketSessions.completedAt))
+        .limit(1);
+      
+      return sessions[0] || null;
+    } catch (error) {
+      console.error('Error fetching latest completed session:', error);
+      throw new Error('Failed to fetch latest completed session');
     }
   }
 };

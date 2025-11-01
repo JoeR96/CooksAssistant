@@ -17,7 +17,7 @@ import { ThemeDropdown } from "./theme-dropdown";
 
 interface HeaderProps {
   title: string;
-  subtitle?: string;
+  subtitle?: string | React.ReactNode;
   showAddButton?: boolean;
 }
 
@@ -69,16 +69,22 @@ export function Header({ title, subtitle, showAddButton = false }: HeaderProps) 
                 {title}
               </Typography>
               {subtitle && (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: 'text.secondary',
-                    fontWeight: 500,
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  {subtitle}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 0.5 }}>
+                  {typeof subtitle === 'string' ? (
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: 'text.secondary',
+                        fontWeight: 500,
+                        fontSize: '0.875rem',
+                      }}
+                    >
+                      {subtitle}
+                    </Typography>
+                  ) : (
+                    subtitle
+                  )}
+                </Box>
               )}
             </Box>
           </Box>

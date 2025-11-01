@@ -1,5 +1,5 @@
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist } from './schema';
+import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions } from './schema';
 
 // Recipe types
 export type Recipe = InferSelectModel<typeof recipes>;
@@ -53,4 +53,21 @@ export interface CategoryIngredient {
   quantity: string;
   checked: boolean;
   sources: string[]; // Recipe titles that contain this ingredient
+}
+
+// Brisket session types
+export type BrisketSession = InferSelectModel<typeof brisketSessions>;
+export type NewBrisketSession = InferInsertModel<typeof brisketSessions>;
+
+// Brisket status enum
+export type BrisketStatus = 'smoking' | 'wrapped' | 'finishing' | 'resting' | 'completed';
+
+// Brisket adjustments
+export interface BrisketAdjustments {
+  smokeTemp?: number;
+  wrapTemp?: number;
+  finishTemp?: number;
+  duration?: number;
+  restTime?: number;
+  notes?: string;
 }
