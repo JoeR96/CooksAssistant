@@ -17,7 +17,7 @@ interface CreateCategoryModalProps {
 
 export function CreateCategoryModal({ open, onClose, onSuccess }: CreateCategoryModalProps) {
   const [name, setName] = useState('');
-  const [type, setType] = useState<CategoryType>('custom');
+  const [type, setType] = useState<CategoryType>('christmas');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +37,7 @@ export function CreateCategoryModal({ open, onClose, onSuccess }: CreateCategory
       if (response.ok) {
         onSuccess();
         setName('');
-        setType('custom');
+        setType('christmas');
       } else {
         console.error('Failed to create category');
       }
