@@ -7,6 +7,7 @@ import { BrisketSession } from '@/lib/db/types';
 import { BrisketReviewModal } from '@/components/brisket-review-modal';
 import { BrisketAdjustmentsModal } from '@/components/brisket-adjustments-modal';
 import { BrisketProgressPhotos } from '@/components/brisket-progress-photos';
+import { BrisketCompleteModal } from '@/components/brisket-complete-modal';
 
 interface BrisketTrackerProps {
   session: BrisketSession;
@@ -18,6 +19,7 @@ export function BrisketTracker({ session, onUpdate, isOwner = true }: BrisketTra
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
   const [showReview, setShowReview] = useState(false);
   const [showAdjustments, setShowAdjustments] = useState(false);
+  const [showCompleteModal, setShowCompleteModal] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -103,11 +105,7 @@ export function BrisketTracker({ session, onUpdate, isOwner = true }: BrisketTra
           color: 'primary' as const,
           size: 'medium' as const,
           action: () => {
-            handleStatusUpdate('completed', { 
-              actualDuration: elapsedMinutes,
-              actualRestTime: session.targetRestTime 
-            });
-            setShowReview(true);
+            setShowCompleteModal(true);
           },
         };
       default:
@@ -285,6 +283,22 @@ export function BrisketTracker({ session, onUpdate, isOwner = true }: BrisketTra
       />
 
       <BrisketProgressPhotos sessionId={session.id} isOwner={isOwner} />
+
+      <BrisketCompleteModal
+        open={showCompleteModal}
+        onClose={() => setShowCompleteModal(false)}
+        onConfirm={async (data) => {
+          await handleStatusUpdate('completed', data);
+          setShowCompleteModal(false);
+          setShowReview(true);
+        }}
+        defaultValues={{
+          wrapTemp: session.actualWrapTemp || session.targetWrapTemp,
+          finishTemp: session.actualFinishTemp || session.targetFinishTemp,
+          duration: elapsedMinutes,
+          restTime: session.targetRestTime,
+        }}
+      />
     </>
   );
 }

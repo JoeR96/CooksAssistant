@@ -16,7 +16,7 @@ import {
   DialogContent,
 } from '@mui/material';
 import { Add, Delete, Edit, Close, PhotoCamera } from '@mui/icons-material';
-import { ImageUpload } from './image-upload';
+import { MultiImageUpload } from './multi-image-upload';
 import { BrisketProgressPhoto } from '@/lib/db/types';
 
 interface BrisketProgressPhotosProps {
@@ -28,8 +28,6 @@ export function BrisketProgressPhotos({ sessionId, isOwner }: BrisketProgressPho
   const [photos, setPhotos] = useState<BrisketProgressPhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
-  const [uploadingPhoto, setUploadingPhoto] = useState('');
-  const [caption, setCaption] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editCaption, setEditCaption] = useState('');
   const [selectedPhoto, setSelectedPhoto] = useState<BrisketProgressPhoto | null>(null);
@@ -52,27 +50,24 @@ export function BrisketProgressPhotos({ sessionId, isOwner }: BrisketProgressPho
     }
   };
 
-  const handleUpload = async () => {
-    if (!uploadingPhoto) return;
-
+  const handleMultiUpload = async (urls: string[]) => {
     try {
-      const response = await fetch(`/api/brisket/${sessionId}/photos`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageUrl: uploadingPhoto,
-          caption: caption || null,
-        }),
-      });
-
-      if (response.ok) {
-        setUploadingPhoto('');
-        setCaption('');
-        setShowUpload(false);
-        loadPhotos();
+      // Upload all photos
+      for (const url of urls) {
+        await fetch(`/api/brisket/${sessionId}/photos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageUrl: url,
+            caption: null,
+          }),
+        });
       }
+
+      setShowUpload(false);
+      loadPhotos();
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      console.error('Error uploading photos:', error);
     }
   };
 
@@ -148,36 +143,16 @@ export function BrisketProgressPhotos({ sessionId, isOwner }: BrisketProgressPho
 
         {showUpload && isOwner && (
           <Box sx={{ mb: 3, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
-            <ImageUpload
-              value={uploadingPhoto}
-              onChange={(url) => setUploadingPhoto(url)}
-              label="Progress Photo"
-            />
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Add a caption (optional)"
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              sx={{ mt: 2 }}
+            <MultiImageUpload
+              onUploadComplete={handleMultiUpload}
+              maxFiles={10}
             />
             <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
               <Button
-                variant="contained"
-                onClick={handleUpload}
-                disabled={!uploadingPhoto}
-                sx={{ borderRadius: 2, textTransform: 'none' }}
-              >
-                Upload
-              </Button>
-              <Button
                 variant="outlined"
-                onClick={() => {
-                  setShowUpload(false);
-                  setUploadingPhoto('');
-                  setCaption('');
-                }}
+                onClick={() => setShowUpload(false)}
                 sx={{ borderRadius: 2, textTransform: 'none' }}
+                fullWidth
               >
                 Cancel
               </Button>

@@ -733,6 +733,21 @@ export const brisketSessionQueries = {
       console.error('Error fetching all active sessions:', error);
       throw new Error('Failed to fetch all active sessions');
     }
+  },
+
+  // Get all completed sessions (public)
+  async getAllCompleted() {
+    try {
+      const sessions = await db.select().from(brisketSessions)
+        .where(eq(brisketSessions.status, 'completed'))
+        .orderBy(desc(brisketSessions.completedAt))
+        .limit(50);
+      
+      return sessions;
+    } catch (error) {
+      console.error('Error fetching all completed sessions:', error);
+      throw new Error('Failed to fetch all completed sessions');
+    }
   }
 };
 

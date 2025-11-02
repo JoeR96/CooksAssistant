@@ -30,7 +30,7 @@ export function BrisketSmokingSection() {
             Brisket Smoking
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Live sessions from the community
+            Live sessions and history from the community
           </Typography>
         </Box>
       </Box>

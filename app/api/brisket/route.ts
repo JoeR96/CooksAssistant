@@ -8,9 +8,14 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const active = searchParams.get('active');
     const all = searchParams.get('all');
+    const completed = searchParams.get('completed');
 
-    // Public endpoint - get all active sessions
+    // Public endpoint - get all sessions
     if (all === 'true') {
+      if (completed === 'true') {
+        const sessions = await brisketSessionQueries.getAllCompleted();
+        return NextResponse.json(sessions);
+      }
       const sessions = await brisketSessionQueries.getAllActive();
       return NextResponse.json(sessions);
     }

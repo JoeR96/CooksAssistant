@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Container, Box, Typography, Button as MuiButton, Card, CardContent, Chip, IconButton } from '@mui/material';
-import { Add, LocalFireDepartment, History, ArrowBack } from '@mui/icons-material';
+import { Container, Box, Typography, Button, Button as MuiButton, Card, CardContent, Chip, IconButton } from '@mui/material';
+import { Add, LocalFireDepartment, History, ArrowBack, Edit } from '@mui/icons-material';
 import { BrisketSession } from '@/lib/db/types';
 import { BrisketTracker } from '@/components/brisket-tracker';
 import { StartBrisketModal } from '@/components/start-brisket-modal';
+import { BrisketEditModal } from '@/components/brisket-edit-modal';
 import { Header } from '@/components/header';
 import { useRouter } from 'next/navigation';
 
@@ -13,6 +14,8 @@ export default function BrisketPage() {
   const [activeSession, setActiveSession] = useState<BrisketSession | null>(null);
   const [pastSessions, setPastSessions] = useState<BrisketSession[]>([]);
   const [showStartModal, setShowStartModal] = useState(false);
+  const [editingSession, setEditingSession] = useState<BrisketSession | null>(null);
+  const [showAllHistory, setShowAllHistory] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -172,13 +175,25 @@ export default function BrisketPage() {
             </Card>
           </Box>
 
-          <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-            <History />
-            Past Sessions
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <History />
+              Past Sessions
+            </Typography>
+            {pastSessions.length > 1 && (
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => setShowAllHistory(!showAllHistory)}
+                sx={{ textTransform: 'none' }}
+              >
+                {showAllHistory ? 'Show Less' : `Show All (${pastSessions.length})`}
+              </Button>
+            )}
+          </Box>
           <Box sx={{ display: 'grid', gap: 2 }}>
-            {pastSessions.map((session) => (
-              <Card key={session.id} sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}>
+            {(showAllHistory ? pastSessions : pastSessions.slice(0, 1)).map((session) => (
+              <Card key={session.id} sx={{ '&:hover': { boxShadow: 4 } }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
                     <Box>
@@ -189,15 +204,28 @@ export default function BrisketPage() {
                         {formatDate(session.startedAt)}
                       </Typography>
                     </Box>
-                    <Box sx={{ textAlign: 'right' }}>
-                      {session.rating && (
-                        <Typography variant="h6">
-                          {getRatingStars(session.rating)}
-                        </Typography>
-                      )}
-                      {session.adjustments && (
-                        <Chip label="Adjusted" size="small" color="success" sx={{ mt: 1 }} />
-                      )}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ textAlign: 'right' }}>
+                        {session.rating && (
+                          <Typography variant="h6">
+                            {getRatingStars(session.rating)}
+                          </Typography>
+                        )}
+                        {session.adjustments && (
+                          <Chip label="Adjusted" size="small" color="success" sx={{ mt: 1 }} />
+                        )}
+                      </Box>
+                      <IconButton
+                        onClick={() => setEditingSession(session)}
+                        size="small"
+                        sx={{
+                          bgcolor: 'primary.main',
+                          color: 'white',
+                          '&:hover': { bgcolor: 'primary.dark' },
+                        }}
+                      >
+                        <Edit fontSize="small" />
+                      </IconButton>
                     </Box>
                   </Box>
 
@@ -257,6 +285,18 @@ export default function BrisketPage() {
           loadSessions();
         }}
       />
+
+      {editingSession && (
+        <BrisketEditModal
+          open={!!editingSession}
+          session={editingSession}
+          onClose={() => setEditingSession(null)}
+          onSuccess={() => {
+            setEditingSession(null);
+            loadSessions();
+          }}
+        />
+      )}
       </Container>
     </Box>
   );
