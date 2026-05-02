@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "step": "step-01",
+      "status": "PASS",
+      "msg": "CooksAssistant=true, BrowseCopy=true",
+      "bodyExcerpt": "CooksAssistant\n\nBrowse 0 recipes from our community\n\nMeal Type\n🍽️ All Meals\n🌅 Breakfast\n☀️ Lunch\n🌙 Dinner\n🍿 Snacks\n✨ Other\n​\n​\n📚\nNo recipes found\n\nGet started by adding your first recipe to your collection."
+    },
+    {
+      "step": "step-02",
+      "status": "FAIL",
+      "msg": "No recipes found copy=false",
+      "bodyExcerpt": "Application error: a client-side exception has occurred while loading localhost (see the browser console for more information)."
+    },
+    {
+      "step": "step-03",
+      "status": "FAIL",
+      "msg": "email-input=0, continue-btn=0"
+    },
+    {
+      "step": "step-04",
+      "status": "FAIL",
+      "msg": "signin error: page.fill: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[name=\"identifier\"]')\u001b[22m\n"
+    }
+  ],
+  "allConsole": [
+    {
+      "step": "step-01",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-02",
+      "type": "pageerror",
+      "text": "Rendered more hooks than during the previous render."
+    },
+    {
+      "step": "step-02",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-03",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    }
+  ],
+  "allNetworkFails": []
+}

@@ -1,0 +1,87 @@
+[PASS] step-01: CooksAssistant=true, BrowseCopy=true
+[PASS] step-02: No recipes found copy=true
+[PASS] step-03: email-input=1, continue-btn=1
+[PASS] step-04: redirected to http://localhost:3000/
+[PASS] step-05: MyRecipes=true, ZeroCopy=true, plusBtn=header button:has-text("Add Recipe")
+[PASS] step-06: title-input=dialog>>label:Recipe Title, url=http://localhost:3000/
+[PASS] step-07: form filled (best-effort selectors)
+[PASS] step-08-api: POST /api/recipes status=201, apiRecipeId=null
+[FAIL] step-08: url=http://localhost:3000/dashboard, onDetail=false, sawTestPasta=false, recipeId=null
+[PASS] step-09: url=http://localhost:3000/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452, title=true, ing=true, steps=true, recipeId=5e3c177c-027a-41f9-8da8-c0d503a74452
+[PASS] step-10-api: PUT /api/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452 status=200
+[PASS] step-10: after-edit-url=http://localhost:3000/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452, sawV2=true
+[PASS] step-11: sawV2OnDashboard=true
+[PASS] step-12: No meal plans yet copy=true
+[PASS] step-13: status=201, planId=722672b7-af9c-4845-b691-e861e4f42223
+[FAIL] step-14: sawTestWeek=false
+[PASS] step-15: No meals planned yet copy=true, url=http://localhost:3000/meal-plans/722672b7-af9c-4845-b691-e861e4f42223
+[PASS] step-16: status=201
+[PASS] step-17: sawTestPasta=true, sawPlannedStatus=true
+[PASS] step-18: sawAvailableOrPlan=true
+[PASS] step-19: status=200
+[PASS] step-20: pasta=true, garlic=true, olive=true, items=3/3
+[PASS] step-21: status=404
+[PASS] step-22: status=404
+=== RESULTS ===
+PASS	step-01	CooksAssistant=true, BrowseCopy=true
+PASS	step-02	No recipes found copy=true
+PASS	step-03	email-input=1, continue-btn=1
+PASS	step-04	redirected to http://localhost:3000/
+PASS	step-05	MyRecipes=true, ZeroCopy=true, plusBtn=header button:has-text("Add Recipe")
+PASS	step-06	title-input=dialog>>label:Recipe Title, url=http://localhost:3000/
+PASS	step-07	form filled (best-effort selectors)
+PASS	step-08-api	POST /api/recipes status=201, apiRecipeId=null
+FAIL	step-08	url=http://localhost:3000/dashboard, onDetail=false, sawTestPasta=false, recipeId=null
+PASS	step-09	url=http://localhost:3000/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452, title=true, ing=true, steps=true, recipeId=5e3c177c-027a-41f9-8da8-c0d503a74452
+PASS	step-10-api	PUT /api/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452 status=200
+PASS	step-10	after-edit-url=http://localhost:3000/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452, sawV2=true
+PASS	step-11	sawV2OnDashboard=true
+PASS	step-12	No meal plans yet copy=true
+PASS	step-13	status=201, planId=722672b7-af9c-4845-b691-e861e4f42223
+FAIL	step-14	sawTestWeek=false
+PASS	step-15	No meals planned yet copy=true, url=http://localhost:3000/meal-plans/722672b7-af9c-4845-b691-e861e4f42223
+PASS	step-16	status=201
+PASS	step-17	sawTestPasta=true, sawPlannedStatus=true
+PASS	step-18	sawAvailableOrPlan=true
+PASS	step-19	status=200
+PASS	step-20	pasta=true, garlic=true, olive=true, items=3/3
+PASS	step-21	status=404
+PASS	step-22	status=404
+=== CONSOLE/PAGE ERRORS ===
+[step-01] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-02] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-03] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-08] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-08] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-08] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-08] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-09] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-10] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-10] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-11] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-12] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-14] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-14] (error) %o
+
+%s Error: Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with "use server". Or maybe you meant to call this function rather than return it.
+  <... component={function LinkComponent} href=...
+[step-14] (error) Error caught by boundary: Error: Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with "use server". Or maybe you meant to call this function rather than return it.
+  <... component={function Link
+[step-15] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-17] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-18] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-20] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-21] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-21] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-21] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-22] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-22] (error) Failed to load resource: the server responded with a status of 404 (Not Found)
+[step-22] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+=== NETWORK 4xx/5xx ===
+[step-08] 404 http://localhost:3000/dashboard?_rsc=vusbg
+[step-08] 404 http://localhost:3000/dashboard
+[step-08] 404 http://localhost:3000/dashboard
+[step-21] 404 http://localhost:3000/brisket
+[step-21] 404 http://localhost:3000/brisket
+[step-22] 404 http://localhost:3000/categories
+[step-22] 404 http://localhost:3000/categories

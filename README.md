@@ -1,76 +1,43 @@
 # CooksAssistant
 
-A lightweight web application for recipe management, meal planning, and shopping list generation.
+A personal recipe management and meal-planning app.
 
-## Tech Stack
+## What it does
 
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Authentication**: Clerk
-- **Database**: PostgreSQL with Drizzle ORM
-- **Deployment**: Vercel
+- **Recipes** — your library of dish templates (ingredients, steps, tags, photos).
+- **Meal Plans** — schedule Recipes onto specific days and meal slots, with serving counts.
+- **Shopping List** — auto-generated from a Meal Plan; aggregates the ingredients you need to buy.
 
-## Getting Started
+## Tech
 
-### Prerequisites
+Next.js 16 (App Router) + React 19 + TypeScript + Drizzle ORM + PostgreSQL + Clerk auth.
 
-- Node.js 18+ installed
-- PostgreSQL database
-- Clerk account for authentication
+## Local setup
 
-### Installation
+1. `cp .env.example .env.local` and fill in `CLERK_*` keys from your Clerk dev dashboard ([dashboard.clerk.com](https://dashboard.clerk.com))
+2. `docker compose up -d` — starts Postgres on `localhost:3141`
+3. `npm install`
+4. `npm run db:push` — creates tables in the local DB
+5. `npm run dev` — opens on http://localhost:3000 (or http://localhost:3140 inside a bdtv-factory workbench)
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+The database starts empty — no seed data. Create recipes through the UI after signing in.
 
-3. Set up environment variables:
-   - Copy `.env.example` to `.env.local`
-   - Add your Clerk API keys from https://clerk.com
-   - Add your PostgreSQL database URL
+## Scripts
 
-4. Set up the database:
-   ```bash
-   npm run db:push
-   ```
+| Command | What it does |
+|---------|--------------|
+| `npm run dev` | Next dev server |
+| `npm run build` / `npm run start` | Production build & serve |
+| `npm run lint` | ESLint |
+| `npm run db:push` | Sync schema to DB (fast dev loop, no migration files) |
+| `npm run db:generate` | Generate a versioned migration from schema changes |
+| `npm run db:migrate` | Apply versioned migrations |
+| `npm run db:studio` | Drizzle Studio GUI |
 
-5. Run the development server:
-   ```bash
-   npm run dev
-   ```
+## Bounded contexts
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser
+See `glossary.md` for terms. The codebase is organised around three contexts that stay decoupled:
 
-## Database Commands
-
-- `npm run db:generate` - Generate migration files
-- `npm run db:migrate` - Run migrations
-- `npm run db:push` - Push schema changes to database
-- `npm run db:studio` - Open Drizzle Studio
-
-## Project Structure
-
-```
-├── app/                    # Next.js App Router
-│   ├── (auth)/            # Authentication routes
-│   ├── dashboard/         # Dashboard page
-│   ├── recipes/           # Recipe management
-│   ├── shopping-lists/    # Shopping list features
-│   └── api/              # API routes
-├── components/           # Reusable UI components
-├── lib/                 # Utilities and configurations
-│   └── db/             # Database schema and connection
-├── types/              # TypeScript type definitions
-└── drizzle/            # Database migrations
-```
-
-## Features
-
-- Recipe management with meal type categorization
-- Shopping list generation from recipes
-- Recipe notes with photos
-- Mobile-responsive design
-- Secure authentication with Clerk
+- **`app/recipes/`** + `lib/db/queries.ts:recipeQueries` — the template library
+- **`app/meal-plans/`** + `lib/db/queries.ts:mealPlanQueries` — schedule recipes onto dates
+- **`app/shopping-list/`** + `lib/services/shopping-list-generator.ts` — derived from a Meal Plan

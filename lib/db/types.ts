@@ -1,77 +1,39 @@
 import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
-import { recipes, shoppingListItems, recipeNotes, recipeCategories, recipeCategoryItems, categoryIngredientChecklist, brisketSessions, brisketProgressPhotos } from './schema';
+import { recipes, recipeNotes, mealPlans, plannedMeals, shoppingLists, shoppingListItems } from './schema';
 
-// Recipe types
+// Recipes context
 export type Recipe = InferSelectModel<typeof recipes>;
 export type NewRecipe = InferInsertModel<typeof recipes>;
 
-// Shopping list item types
-export type ShoppingListItem = InferSelectModel<typeof shoppingListItems>;
-export type NewShoppingListItem = InferInsertModel<typeof shoppingListItems>;
-
-// Recipe note types
 export type RecipeNote = InferSelectModel<typeof recipeNotes>;
 export type NewRecipeNote = InferInsertModel<typeof recipeNotes>;
 
-// Recipe category types
-export type RecipeCategory = InferSelectModel<typeof recipeCategories>;
-export type NewRecipeCategory = InferInsertModel<typeof recipeCategories>;
-
-// Recipe category item types
-export type RecipeCategoryItem = InferSelectModel<typeof recipeCategoryItems>;
-export type NewRecipeCategoryItem = InferInsertModel<typeof recipeCategoryItems>;
-
-// Category ingredient checklist types
-export type CategoryIngredientChecklist = InferSelectModel<typeof categoryIngredientChecklist>;
-export type NewCategoryIngredientChecklist = InferInsertModel<typeof categoryIngredientChecklist>;
-
-// Meal type enum
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'other';
 
-// Category type enum
-export type CategoryType = 'christmas' | 'planned_meals';
-
-// Additional utility types
 export interface RecipeWithNotes extends Recipe {
   notes: RecipeNote[];
 }
 
-export interface ShoppingListData {
+// Meal Planning context
+export type MealPlan = InferSelectModel<typeof mealPlans>;
+export type NewMealPlan = InferInsertModel<typeof mealPlans>;
+
+export type PlannedMeal = InferSelectModel<typeof plannedMeals>;
+export type NewPlannedMeal = InferInsertModel<typeof plannedMeals>;
+
+export type PlannedMealStatus = 'planned' | 'cooked' | 'skipped';
+
+export interface MealPlanWithMeals extends MealPlan {
+  meals: (PlannedMeal & { recipe: Pick<Recipe, 'id' | 'title' | 'imageUrl' | 'ingredients'> })[];
+}
+
+// Shopping List context
+export type ShoppingList = InferSelectModel<typeof shoppingLists>;
+export type NewShoppingList = InferInsertModel<typeof shoppingLists>;
+
+export type ShoppingListItem = InferSelectModel<typeof shoppingListItems>;
+export type NewShoppingListItem = InferInsertModel<typeof shoppingListItems>;
+
+export interface ShoppingListWithItems extends ShoppingList {
   items: ShoppingListItem[];
-  recipeIds: string[];
-  userId: string;
 }
-
-export interface CategoryWithRecipes extends RecipeCategory {
-  recipes: Recipe[];
-  ingredientCount: number;
-  checkedIngredientCount: number;
-}
-
-export interface CategoryIngredient {
-  ingredient: string;
-  quantity: string;
-  checked: boolean;
-  sources: string[]; // Recipe titles that contain this ingredient
-}
-
-// Brisket session types
-export type BrisketSession = InferSelectModel<typeof brisketSessions>;
-export type NewBrisketSession = InferInsertModel<typeof brisketSessions>;
-
-// Brisket status enum
-export type BrisketStatus = 'smoking' | 'wrapped' | 'finishing' | 'resting' | 'completed';
-
-// Brisket adjustments
-export interface BrisketAdjustments {
-  smokeTemp?: number;
-  wrapTemp?: number;
-  finishTemp?: number;
-  duration?: number;
-  restTime?: number;
-  notes?: string;
-}
-
-// Brisket progress photo types
-export type BrisketProgressPhoto = InferSelectModel<typeof brisketProgressPhotos>;
-export type NewBrisketProgressPhoto = InferInsertModel<typeof brisketProgressPhotos>;

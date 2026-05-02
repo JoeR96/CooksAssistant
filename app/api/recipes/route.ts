@@ -1,35 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, getUserId } from "@/lib/auth/utils";
 import { recipeQueries } from "@/lib/db/queries";
+import { MealType } from "@/lib/db/types";
 
 export async function GET(request: NextRequest) {
   try {
     const userId = await getUserId();
     const { searchParams } = new URL(request.url);
-    
+
     const mealType = searchParams.get("mealType");
-    const category = searchParams.get("category");
     const search = searchParams.get("search");
 
     let recipes;
 
     if (userId) {
-      // Authenticated user - show their recipes
       if (search) {
         recipes = await recipeQueries.search(userId, search);
-      } else if (category && category !== "all") {
-        recipes = await recipeQueries.getByCategory(userId, category as any);
       } else if (mealType && mealType !== "all") {
-        recipes = await recipeQueries.getByMealType(userId, mealType as any);
+        recipes = await recipeQueries.getByMealType(userId, mealType as MealType);
       } else {
         recipes = await recipeQueries.getByUserId(userId);
       }
     } else {
-      // Public access - show all recipes (no category filtering for public)
       if (search) {
         recipes = await recipeQueries.searchPublic(search);
       } else if (mealType && mealType !== "all") {
-        recipes = await recipeQueries.getByMealTypePublic(mealType as any);
+        recipes = await recipeQueries.getByMealTypePublic(mealType as MealType);
       } else {
         recipes = await recipeQueries.getAllPublic();
       }
@@ -52,7 +48,6 @@ export async function POST(request: NextRequest) {
 
     const { title, description, mealType, ingredients, steps, tags, imageUrl } = body;
 
-    // Validate required fields
     if (!title || !ingredients || !steps || !mealType) {
       return NextResponse.json(
         { error: "Missing required fields" },

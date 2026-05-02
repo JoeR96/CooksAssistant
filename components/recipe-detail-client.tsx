@@ -50,7 +50,7 @@ export function RecipeDetailClient({ recipe, userId }: RecipeDetailClientProps) 
         {/* Back Button */}
         <Button
           component={Link}
-          href="/dashboard"
+          href="/"
           startIcon={<ArrowBack />}
           sx={{ mb: 3, color: 'text.secondary' }}
         >

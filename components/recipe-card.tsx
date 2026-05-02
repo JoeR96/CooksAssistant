@@ -17,7 +17,6 @@ import {
 import { AccessTime, People, Edit } from "@mui/icons-material";
 import { RecipeFormModal } from "./recipe-form-modal";
 import { useUserSession } from "@/lib/auth/hooks";
-import { CategoryToggleButtons } from "./category-toggle-buttons";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -152,10 +151,6 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             </Tooltip>
           )}
 
-          {/* Category Toggle Buttons - Show for authenticated users */}
-          {userId && (
-            <CategoryToggleButtons recipeId={recipe.id} />
-          )}
         </Box>
 
         <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2, minHeight: 120 }}>
