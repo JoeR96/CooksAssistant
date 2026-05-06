@@ -1,0 +1,300 @@
+{
+  "results": [
+    {
+      "step": "step-01",
+      "status": "PASS",
+      "msg": "CooksAssistant=true, BrowseCopy=true",
+      "bodyExcerpt": "CooksAssistant\n\nBrowse 0 recipes from our community\n\nMeal Type\n🍽️ All Meals\n🌅 Breakfast\n☀️ Lunch\n🌙 Dinner\n🍿 Snacks\n✨ Other\n​\n​\n📚\nNo recipes found\n\nGet started by adding your first recipe to your collection."
+    },
+    {
+      "step": "step-02",
+      "status": "PASS",
+      "msg": "No recipes found copy=true",
+      "bodyExcerpt": "Recipes\n\nBrowse 0 recipes from our community\n\nSign In\nMeal Type\n🍽️ All Meals\n🌅 Breakfast\n☀️ Lunch\n🌙 Dinner\n🍿 Snacks\n✨ Other\n​\n​\n📚\nNo recipes found\n\nGet started by adding your first recipe to your collection."
+    },
+    {
+      "step": "step-03",
+      "status": "PASS",
+      "msg": "email-input=1, continue-btn=1"
+    },
+    {
+      "step": "step-04",
+      "status": "PASS",
+      "msg": "redirected to http://localhost:3000/"
+    },
+    {
+      "step": "step-05",
+      "status": "PASS",
+      "msg": "MyRecipes=true, ZeroCopy=true, plusBtn=header button:has-text(\"Add Recipe\")",
+      "bodyExcerpt": "My Recipes\n\n0 recipes in your collection\n\nAdd Recipe\nMeal Type\n🍽️ All Meals\n🌅 Breakfast\n☀️ Lunch\n🌙 Dinner\n🍿 Snacks\n✨ Other\n​\n​\n📚\nNo recipes found\n\nGet started by adding your first recipe to your collection."
+    },
+    {
+      "step": "step-06",
+      "status": "PASS",
+      "msg": "title-input=dialog>>label:Recipe Title, url=http://localhost:3000/"
+    },
+    {
+      "step": "step-07",
+      "status": "PASS",
+      "msg": "form filled (best-effort selectors)"
+    },
+    {
+      "step": "step-08-api",
+      "status": "PASS",
+      "msg": "POST /api/recipes status=201, apiRecipeId=null"
+    },
+    {
+      "step": "step-08",
+      "status": "FAIL",
+      "msg": "url=http://localhost:3000/dashboard, onDetail=false, sawTestPasta=false, recipeId=null"
+    },
+    {
+      "step": "step-09",
+      "status": "PASS",
+      "msg": "url=http://localhost:3000/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452, title=true, ing=true, steps=true, recipeId=5e3c177c-027a-41f9-8da8-c0d503a74452"
+    },
+    {
+      "step": "step-10-api",
+      "status": "PASS",
+      "msg": "PUT /api/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452 status=200"
+    },
+    {
+      "step": "step-10",
+      "status": "PASS",
+      "msg": "after-edit-url=http://localhost:3000/recipes/5e3c177c-027a-41f9-8da8-c0d503a74452, sawV2=true"
+    },
+    {
+      "step": "step-11",
+      "status": "PASS",
+      "msg": "sawV2OnDashboard=true"
+    },
+    {
+      "step": "step-12",
+      "status": "PASS",
+      "msg": "No meal plans yet copy=true",
+      "bodyExcerpt": "Meal Plans\n\nNo meal plans yet. Create one via POST /api/meal-plans with name, startDate, endDate. Rich UI to follow."
+    },
+    {
+      "step": "step-13",
+      "status": "PASS",
+      "msg": "status=201, planId=722672b7-af9c-4845-b691-e861e4f42223",
+      "bodyJson": "{\"id\":\"722672b7-af9c-4845-b691-e861e4f42223\",\"userId\":\"user_3D8ky0OQDCCpNRltSB0sHyACO2b\",\"name\":\"Test Week\",\"startDate\":\"2026-05-04\",\"endDate\":\"2026-05-10\",\"createdAt\":\"2026-05-01T23:14:26.292Z\",\"updatedAt\":\"2026-05-01T23:14:26.292Z\"}"
+    },
+    {
+      "step": "step-14",
+      "status": "FAIL",
+      "msg": "sawTestWeek=false",
+      "bodyExcerpt": "Something went wrong\n\nWe encountered an unexpected error. Please try again.\n\nError details\nTry Again"
+    },
+    {
+      "step": "step-15",
+      "status": "PASS",
+      "msg": "No meals planned yet copy=true, url=http://localhost:3000/meal-plans/722672b7-af9c-4845-b691-e861e4f42223",
+      "bodyExcerpt": "Test Week\n\n2026-05-04 – 2026-05-10\n\nNo meals planned yet. Add one via POST /api/meal-plans/722672b7-af9c-4845-b691-e861e4f42223/meals with recipeId, scheduledDate, mealType, servings."
+    },
+    {
+      "step": "step-16",
+      "status": "PASS",
+      "msg": "status=201",
+      "bodyJson": "{\"id\":\"56ced2d9-f6f6-414e-a0c9-cc2e7781ec0d\",\"mealPlanId\":\"722672b7-af9c-4845-b691-e861e4f42223\",\"recipeId\":\"5e3c177c-027a-41f9-8da8-c0d503a74452\",\"scheduledDate\":\"2026-05-06\",\"mealType\":\"dinner\",\"servings\":4,\"status\":\"planned\",\"notes\":null,\"createdAt\":\"2026-05-01T23:14:29.384Z\"}"
+    },
+    {
+      "step": "step-17",
+      "status": "PASS",
+      "msg": "sawTestPasta=true, sawPlannedStatus=true",
+      "bodyExcerpt": "Test Week\n\n2026-05-04 – 2026-05-10\n\nTest Pasta v2\n\n2026-05-06 · dinner · 4 servings\n\nplanned"
+    },
+    {
+      "step": "step-18",
+      "status": "PASS",
+      "msg": "sawAvailableOrPlan=true",
+      "bodyExcerpt": "Shopping List\n\nGenerate from a meal plan via POST /api/shopping-list/generate with a mealPlanId, or add items manually via POST /api/shopping-list/items.\n\nAvailable meal plans\nTest Week (722672b7)\n\nNo items yet. Generate from a meal plan above or add items manually."
+    },
+    {
+      "step": "step-19",
+      "status": "PASS",
+      "msg": "status=200",
+      "bodyJson": "{\"id\":\"ae40e94e-cae5-48f0-84c6-5036e2122421\",\"userId\":\"user_3D8ky0OQDCCpNRltSB0sHyACO2b\",\"mealPlanId\":\"722672b7-af9c-4845-b691-e861e4f42223\",\"name\":\"Test Week\",\"createdAt\":\"2026-05-01T23:14:31.281Z\",\"updatedAt\":\"2026-05-01T23:14:31.293Z\",\"items\":[{\"id\":\"43793b9d-edff-4bf4-be16-ed5eab4d2fc8\",\"shoppingListId\":\"ae40e94e-cae5-48f0-84c6-5036e2122421\",\"recipeId\":\"5e3c177c-027a-41f9-8da8-c0d503a74452\",\"name\":\"2 cloves garlic\",\"quantity\":null,\"checked\":false,\"createdAt\":\"2026-05-01T23:14:31.289Z\"},{\"id\""
+    },
+    {
+      "step": "step-20",
+      "status": "PASS",
+      "msg": "pasta=true, garlic=true, olive=true, items=3/3",
+      "bodyExcerpt": "Shopping List\n\nGenerate from a meal plan via POST /api/shopping-list/generate with a mealPlanId, or add items manually via POST /api/shopping-list/items.\n\nAvailable meal plans\nTest Week (722672b7)\nTest Week\n\n2 cloves garlic\n\n200g pasta\n\nolive oil"
+    },
+    {
+      "step": "step-21",
+      "status": "PASS",
+      "msg": "status=404"
+    },
+    {
+      "step": "step-22",
+      "status": "PASS",
+      "msg": "status=404"
+    }
+  ],
+  "allConsole": [
+    {
+      "step": "step-01",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-02",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-03",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-08",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-08",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-08",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-08",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-09",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-10",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-10",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-11",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-12",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-14",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-14",
+      "type": "error",
+      "text": "%o\n\n%s Error: Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with \"use server\". Or maybe you meant to call this function rather than return it.\n  <... component={function LinkComponent} href=... sx=... children=...>\n                 ^^^^^^^^^^^^^^^^^^^^^^^^\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:1855:148)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2363:29)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2322:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2432:98)\n    at progress (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2601:13) The above error occurred in the <Unknown> component. It was handled by the <ErrorBoundary> error boundary."
+    },
+    {
+      "step": "step-14",
+      "type": "error",
+      "text": "Error caught by boundary: Error: Functions cannot be passed directly to Client Components unless you explicitly expose it by marking it with \"use server\". Or maybe you meant to call this function rather than return it.\n  <... component={function LinkComponent} href=... sx=... children=...>\n                 ^^^^^^^^^^^^^^^^^^^^^^^^\n    at stringify (<anonymous>:1:18)\n    at resolveErrorDev (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:1855:148)\n    at processFullStringRow (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2363:29)\n    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2322:9)\n    at processBinaryChunk (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2432:98)\n    at progress (http://localhost:3000/_next/static/chunks/48bf0_next_dist_compiled_react-server-dom-turbopack_1763dcb9._.js:2601:13) {componentStack: \n    at  (<anonymous>)\n    at div (<anonymous>)\n  …ks/48bf0_next_dist_client_62039e1d._.js:12798:17)}"
+    },
+    {
+      "step": "step-15",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-17",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-18",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-20",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-21",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-21",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-21",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    },
+    {
+      "step": "step-22",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-22",
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "step": "step-22",
+      "type": "warning",
+      "text": "Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview"
+    }
+  ],
+  "allNetworkFails": [
+    {
+      "step": "step-08",
+      "status": 404,
+      "url": "http://localhost:3000/dashboard?_rsc=vusbg"
+    },
+    {
+      "step": "step-08",
+      "status": 404,
+      "url": "http://localhost:3000/dashboard"
+    },
+    {
+      "step": "step-08",
+      "status": 404,
+      "url": "http://localhost:3000/dashboard"
+    },
+    {
+      "step": "step-21",
+      "status": 404,
+      "url": "http://localhost:3000/brisket"
+    },
+    {
+      "step": "step-21",
+      "status": 404,
+      "url": "http://localhost:3000/brisket"
+    },
+    {
+      "step": "step-22",
+      "status": 404,
+      "url": "http://localhost:3000/categories"
+    },
+    {
+      "step": "step-22",
+      "status": 404,
+      "url": "http://localhost:3000/categories"
+    }
+  ]
+}

@@ -158,8 +158,7 @@ export function RecipeFormModal({
           // For editing, refresh the current page
           window.location.reload();
         } else {
-          // For new recipes, redirect to dashboard
-          router.push("/dashboard");
+          router.push("/");
         }
       } else {
         const error = await response.json();

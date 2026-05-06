@@ -1,0 +1,26 @@
+[PASS] step-01: CooksAssistant=true, BrowseCopy=true
+[FAIL] step-02: No recipes found copy=false
+[FAIL] step-03: email-input=0, continue-btn=0
+[FAIL] step-04: signin error: page.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="identifier"]')[22m
+
+FATAL: page.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="identifier"]')[22m
+
+    at C:\dev\bdtv-orchestration-station\workshops\CooksAssistant\.worktrees\import-to-bdtv-factory\playwright-debug\walkthrough.mjs:74:16
+=== RESULTS ===
+PASS	step-01	CooksAssistant=true, BrowseCopy=true
+FAIL	step-02	No recipes found copy=false
+FAIL	step-03	email-input=0, continue-btn=0
+FAIL	step-04	signin error: page.fill: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[name="identifier"]')[22m
+
+=== CONSOLE/PAGE ERRORS ===
+[step-01] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-02] (pageerror) Rendered more hooks than during the previous render.
+[step-02] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+[step-03] (warning) Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview
+=== NETWORK 4xx/5xx ===

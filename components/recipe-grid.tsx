@@ -1,11 +1,10 @@
 import { Recipe } from "@/lib/db/types";
 import { RecipeCard } from "./recipe-card";
-import { SeedButton } from "@/components/seed-button";
-import { 
-  Card, 
-  CardContent, 
-  Skeleton, 
-  Box, 
+import {
+  Card,
+  CardContent,
+  Skeleton,
+  Box,
   Typography,
   Stack
 } from "@mui/material";
@@ -64,7 +63,6 @@ export function RecipeGrid({ recipes, isLoading = false }: RecipeGridProps) {
         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
           Get started by adding your first recipe to your collection.
         </Typography>
-        <SeedButton />
       </Box>
     );
   }

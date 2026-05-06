@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "3141:5432"
+    environment:
+      POSTGRES_USER: cooks
+      POSTGRES_PASSWORD: cooks_dev
+      POSTGRES_DB: cooks_assistant
+    volumes:
+      - cooks_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cooks -d cooks_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  cooks_db_data:

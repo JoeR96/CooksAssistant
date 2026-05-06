@@ -117,7 +117,7 @@ export function RecipeForm({ recipe, isEditing = false }: RecipeFormProps) {
       });
 
       if (response.ok) {
-        router.push("/dashboard");
+        router.push("/");
       } else {
         const error = await response.json();
         setErrors({ submit: error.message || "Failed to save recipe" });
