@@ -7,6 +7,7 @@ const isProtectedRoute = createRouteMatcher([
   '/recipes/:id/edit',
   '/meal-plans(.*)',
   '/shopping-list(.*)',
+  '/seed',
 ]);
 
 // Routes that are completely public (no auth required)
